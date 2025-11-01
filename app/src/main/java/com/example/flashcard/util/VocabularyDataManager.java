@@ -101,5 +101,47 @@ public class VocabularyDataManager {
         List<VocabularySet> sets = getUserVocabularySets();
         return sets.stream().anyMatch(set -> set.getJsonFileName().equals(jsonFileName));
     }
+    
+    /**
+     * Cập nhật bộ từ vựng
+     */
+    public void updateVocabularySet(VocabularySet updatedSet) {
+        List<VocabularySet> sets = getUserVocabularySets();
+        for (int i = 0; i < sets.size(); i++) {
+            if (sets.get(i).getJsonFileName().equals(updatedSet.getJsonFileName())) {
+                sets.set(i, updatedSet);
+                break;
+            }
+        }
+        saveVocabularySets(sets);
+    }
+    
+    /**
+     * Xóa từ vựng khỏi bộ từ vựng
+     */
+    public void deleteWordFromSet(String jsonFileName, Word wordToDelete) {
+        List<Word> words = getWordsForSet(jsonFileName);
+        words.removeIf(word -> 
+            word.getEnglish().equals(wordToDelete.getEnglish()) && 
+            word.getVietnamese().equals(wordToDelete.getVietnamese())
+        );
+        saveWordsForSet(jsonFileName, words);
+    }
+    
+    /**
+     * Cập nhật từ vựng trong bộ từ vựng
+     */
+    public void updateWordInSet(String jsonFileName, Word oldWord, Word newWord) {
+        List<Word> words = getWordsForSet(jsonFileName);
+        for (int i = 0; i < words.size(); i++) {
+            Word word = words.get(i);
+            if (word.getEnglish().equals(oldWord.getEnglish()) && 
+                word.getVietnamese().equals(oldWord.getVietnamese())) {
+                words.set(i, newWord);
+                break;
+            }
+        }
+        saveWordsForSet(jsonFileName, words);
+    }
 }
 

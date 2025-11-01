@@ -17,14 +17,26 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
 
     private final List<Word> wordList;
     private final OnSpeakerClickListener speakerClickListener;
+    private final OnItemLongClickListener longClickListener;
 
     public interface OnSpeakerClickListener {
         void onSpeakerClick(String word);
+    }
+    
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Word word, int position);
     }
 
     public WordAdapter(List<Word> wordList, OnSpeakerClickListener listener) {
         this.wordList = wordList;
         this.speakerClickListener = listener;
+        this.longClickListener = null;
+    }
+    
+    public WordAdapter(List<Word> wordList, OnSpeakerClickListener listener, OnItemLongClickListener longClickListener) {
+        this.wordList = wordList;
+        this.speakerClickListener = listener;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -57,6 +69,15 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             if (speakerClickListener != null) {
                 speakerClickListener.onSpeakerClick(word.getEnglish());
             }
+        });
+        
+        // Xử lý long click vào item
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onItemLongClick(word, position);
+                return true;
+            }
+            return false;
         });
     }
 

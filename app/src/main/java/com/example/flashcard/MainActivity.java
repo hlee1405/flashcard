@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Button;
 import com.example.flashcard.adapter.VocabularySetAdapter;
 import com.example.flashcard.dialog.AddVocabularySetDialog;
+import com.example.flashcard.dialog.EditVocabularySetDialog;
 import com.example.flashcard.model.VocabularySet;
 import com.example.flashcard.model.Word;
 import com.example.flashcard.util.VocabularyDataManager;
@@ -113,7 +114,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             },
             // Click vào play button -> hiển thị dialog chọn chế độ
-            this::showModeSelectionDialog
+            this::showModeSelectionDialog,
+            // Long click vào item -> hiển thị dialog chỉnh sửa/xóa
+            set -> {
+                // Chỉ cho phép chỉnh sửa/xóa bộ từ vựng do user tạo
+                if (dataManager.isUserCreatedSet(set.getJsonFileName())) {
+                    showEditVocabularySetDialog(set);
+                } else {
+                    android.widget.Toast.makeText(this, "Không thể chỉnh sửa bộ từ vựng mặc định!", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            }
         );
         recyclerView.setAdapter(adapter);
     }
@@ -167,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
     private void showAddVocabularySetDialog() {
         AddVocabularySetDialog dialog = new AddVocabularySetDialog(
             this,
-            set -> {
+            newSet -> {
                 // Sau khi thêm thành công, reload danh sách
                 loadVocabularySets();
                 // Tạo lại adapter với danh sách mới
@@ -179,7 +189,14 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("CATEGORY_TITLE", set1.getTitle());
                         startActivity(intent);
                     },
-                    this::showModeSelectionDialog
+                    this::showModeSelectionDialog,
+                    set2 -> {
+                        if (dataManager.isUserCreatedSet(set2.getJsonFileName())) {
+                            showEditVocabularySetDialog(set2);
+                        } else {
+                            android.widget.Toast.makeText(this, "Không thể chỉnh sửa bộ từ vựng mặc định!", android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 );
                 recyclerView.setAdapter(adapter);
             }
@@ -201,7 +218,14 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("CATEGORY_TITLE", set.getTitle());
                     startActivity(intent);
                 },
-                this::showModeSelectionDialog
+                this::showModeSelectionDialog,
+                set -> {
+                    if (dataManager.isUserCreatedSet(set.getJsonFileName())) {
+                        showEditVocabularySetDialog(set);
+                    } else {
+                        android.widget.Toast.makeText(this, "Không thể chỉnh sửa bộ từ vựng mặc định!", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
             );
             recyclerView.setAdapter(adapter);
         }
@@ -275,5 +299,57 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+    
+    private void showEditVocabularySetDialog(VocabularySet set) {
+        EditVocabularySetDialog dialog = new EditVocabularySetDialog(
+            this,
+            set,
+            updatedSet -> {
+                // Sau khi cập nhật, reload danh sách
+                loadVocabularySets();
+                adapter = new VocabularySetAdapter(
+                    vocabularySets,
+                    set1 -> {
+                        Intent intent = new Intent(MainActivity.this, VocabularyListActivity.class);
+                        intent.putExtra("JSON_FILE_NAME", set1.getJsonFileName());
+                        intent.putExtra("CATEGORY_TITLE", set1.getTitle());
+                        startActivity(intent);
+                    },
+                    this::showModeSelectionDialog,
+                    set2 -> {
+                        if (dataManager.isUserCreatedSet(set2.getJsonFileName())) {
+                            showEditVocabularySetDialog(set2);
+                        } else {
+                            android.widget.Toast.makeText(this, "Không thể chỉnh sửa bộ từ vựng mặc định!", android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                );
+                recyclerView.setAdapter(adapter);
+            },
+            deletedSet -> {
+                // Sau khi xóa, reload danh sách
+                loadVocabularySets();
+                adapter = new VocabularySetAdapter(
+                    vocabularySets,
+                    set1 -> {
+                        Intent intent = new Intent(MainActivity.this, VocabularyListActivity.class);
+                        intent.putExtra("JSON_FILE_NAME", set1.getJsonFileName());
+                        intent.putExtra("CATEGORY_TITLE", set1.getTitle());
+                        startActivity(intent);
+                    },
+                    this::showModeSelectionDialog,
+                    set2 -> {
+                        if (dataManager.isUserCreatedSet(set2.getJsonFileName())) {
+                            showEditVocabularySetDialog(set2);
+                        } else {
+                            android.widget.Toast.makeText(this, "Không thể chỉnh sửa bộ từ vựng mặc định!", android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                );
+                recyclerView.setAdapter(adapter);
+            }
+        );
+        dialog.show();
     }
 }

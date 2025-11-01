@@ -7,5 +7,6 @@
     <color name="green_light">#FF81C784</color>
     <color name="green_dark">#FF388E3C</color>
     <color name="notification_red">#FFF44336</color>
+    <color name="orange_delete">#FFFF9800</color>
     <color name="divider_gray">#FFE0E0E0</color>
 </resources>

@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Button;
 import com.example.flashcard.adapter.WordAdapter;
 import com.example.flashcard.dialog.AddWordDialog;
+import com.example.flashcard.dialog.EditWordDialog;
 import com.example.flashcard.model.Word;
 import com.example.flashcard.util.VocabularyDataManager;
 import com.google.gson.Gson;
@@ -66,6 +68,13 @@ public class VocabularyListActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        // Đảm bảo nút back có màu trắng
+        if (toolbar.getNavigationIcon() != null) {
+            android.graphics.drawable.Drawable navigationIcon = toolbar.getNavigationIcon();
+            navigationIcon = DrawableCompat.wrap(navigationIcon);
+            DrawableCompat.setTint(navigationIcon, getResources().getColor(R.color.white, null));
+            toolbar.setNavigationIcon(navigationIcon);
+        }
         toolbar.setNavigationOnClickListener(v -> finish());
         
         // Load từ vựng từ JSON hoặc user data
@@ -75,7 +84,10 @@ public class VocabularyListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewWords);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new WordAdapter(wordList, this::speakWord);
+        adapter = new WordAdapter(wordList, this::speakWord, (word, position) -> {
+            // Long click để chỉnh sửa/xóa từ vựng
+            showEditWordDialog(word);
+        });
         recyclerView.setAdapter(adapter);
         
         // Nút thêm từ vựng
@@ -178,7 +190,9 @@ public class VocabularyListActivity extends AppCompatActivity {
             word -> {
                 // Sau khi thêm thành công, reload danh sách
                 loadWords();
-                adapter = new WordAdapter(wordList, this::speakWord);
+                adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
+                    showEditWordDialog(w);
+                });
                 recyclerView.setAdapter(adapter);
             }
         );
@@ -191,7 +205,9 @@ public class VocabularyListActivity extends AppCompatActivity {
         // Reload khi quay lại màn hình này
         loadWords();
         if (adapter != null && wordList != null) {
-            adapter = new WordAdapter(wordList, this::speakWord);
+            adapter = new WordAdapter(wordList, this::speakWord, (word, position) -> {
+                showEditWordDialog(word);
+            });
             recyclerView.setAdapter(adapter);
         }
     }
@@ -212,6 +228,31 @@ public class VocabularyListActivity extends AppCompatActivity {
         }
     }
 
+    private void showEditWordDialog(Word word) {
+        EditWordDialog dialog = new EditWordDialog(
+            this,
+            jsonFileName,
+            word,
+            updatedWord -> {
+                // Sau khi cập nhật, reload danh sách
+                loadWords();
+                adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
+                    showEditWordDialog(w);
+                });
+                recyclerView.setAdapter(adapter);
+            },
+            deletedWord -> {
+                // Sau khi xóa, reload danh sách
+                loadWords();
+                adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
+                    showEditWordDialog(w);
+                });
+                recyclerView.setAdapter(adapter);
+            }
+        );
+        dialog.show();
+    }
+    
     @Override
     protected void onDestroy() {
         if (tts != null) {

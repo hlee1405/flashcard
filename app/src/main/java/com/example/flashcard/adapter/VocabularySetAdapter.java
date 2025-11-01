@@ -20,6 +20,7 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
     private final List<VocabularySet> allSets; // Danh sách gốc đầy đủ
     private final OnItemClickListener listener;
     private final OnPlayButtonClickListener playButtonListener;
+    private final OnItemLongClickListener longClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(VocabularySet set);
@@ -28,6 +29,10 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
     public interface OnPlayButtonClickListener {
         void onPlayButtonClick(VocabularySet set);
     }
+    
+    public interface OnItemLongClickListener {
+        void onItemLongClick(VocabularySet set);
+    }
 
     public VocabularySetAdapter(List<VocabularySet> vocabularySets, OnItemClickListener listener, OnPlayButtonClickListener playButtonListener) {
         // Lưu trữ danh sách gốc và khởi tạo danh sách hiển thị
@@ -35,6 +40,16 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
         this.displayedSets = vocabularySets;
         this.listener = listener;
         this.playButtonListener = playButtonListener;
+        this.longClickListener = null;
+    }
+    
+    public VocabularySetAdapter(List<VocabularySet> vocabularySets, OnItemClickListener listener, OnPlayButtonClickListener playButtonListener, OnItemLongClickListener longClickListener) {
+        // Lưu trữ danh sách gốc và khởi tạo danh sách hiển thị
+        this.allSets = new ArrayList<>(vocabularySets);
+        this.displayedSets = vocabularySets;
+        this.listener = listener;
+        this.playButtonListener = playButtonListener;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -58,6 +73,15 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
             if (listener != null) {
                 listener.onItemClick(set);
             }
+        });
+        
+        // Xử lý long click vào item
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onItemLongClick(set);
+                return true;
+            }
+            return false;
         });
         
         // Xử lý click vào play button
