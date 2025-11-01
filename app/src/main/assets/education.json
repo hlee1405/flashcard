@@ -1,0 +1,22 @@
+[
+  { "english": "Assignment", "vietnamese": "Bài tập lớn", "pronunciation": "/əˈsaɪn.mənt/" },
+  { "english": "Campus", "vietnamese": "Khuôn viên trường", "pronunciation": "/ˈkæm.pəs/" },
+  { "english": "Classmate", "vietnamese": "Bạn cùng lớp", "pronunciation": "/ˈklɑːs.meɪt/" },
+  { "english": "College", "vietnamese": "Trường cao đẳng", "pronunciation": "/ˈkɒl.ɪdʒ/" },
+  { "english": "Course", "vietnamese": "Khóa học", "pronunciation": "/kɔːs/" },
+  { "english": "Degree", "vietnamese": "Bằng cấp", "pronunciation": "/dɪˈɡriː/" },
+  { "english": "Diploma", "vietnamese": "Chứng chỉ, văn bằng", "pronunciation": "/dɪˈpləʊ.mə/" },
+  { "english": "Education", "vietnamese": "Giáo dục", "pronunciation": "/ˌedʒ.ʊˈkeɪ.ʃən/" },
+  { "english": "Exam", "vietnamese": "Kỳ thi", "pronunciation": "/ɪɡˈzæm/" },
+  { "english": "Homework", "vietnamese": "Bài tập về nhà", "pronunciation": "/ˈhəʊm.wɜːk/" },
+  { "english": "Knowledge", "vietnamese": "Kiến thức", "pronunciation": "/ˈnɒl.ɪdʒ/" },
+  { "english": "Lecture", "vietnamese": "Bài giảng", "pronunciation": "/ˈlek.tʃər/" },
+  { "english": "Library", "vietnamese": "Thư viện", "pronunciation": "/ˈlaɪ.brər.i/" },
+  { "english": "Professor", "vietnamese": "Giáo sư", "pronunciation": "/prəˈfes.ər/" },
+  { "english": "Scholarship", "vietnamese": "Học bổng", "pronunciation": "/ˈskɒl.ə.ʃɪp/" },
+  { "english": "Science", "vietnamese": "Khoa học", "pronunciation": "/ˈsaɪ.əns/" },
+  { "english": "Student", "vietnamese": "Học sinh, sinh viên", "pronunciation": "/ˈstjuː.dənt/" },
+  { "english": "Subject", "vietnamese": "Môn học", "pronunciation": "/ˈsʌb.dʒekt/" },
+  { "english": "Tuition", "vietnamese": "Học phí", "pronunciation": "/tʃuːˈɪʃ.ən/" },
+  { "english": "University", "vietnamese": "Trường đại học", "pronunciation": "/ˌjuː.nɪˈvɜː.sə.ti/" }
+]

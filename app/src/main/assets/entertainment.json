@@ -1,0 +1,22 @@
+[
+  { "english": "Art", "vietnamese": "Nghệ thuật", "pronunciation": "/ɑːt/" },
+  { "english": "Book", "vietnamese": "Sách", "pronunciation": "/bʊk/" },
+  { "english": "Cinema", "vietnamese": "Rạp chiếu phim", "pronunciation": "/ˈsɪn.ə.mə/" },
+  { "english": "Comedy", "vietnamese": "Hài kịch", "pronunciation": "/ˈkɒm.ə.di/" },
+  { "english": "Concert", "vietnamese": "Buổi hòa nhạc", "pronunciation": "/ˈkɒn.sɜːt/" },
+  { "english": "Dance", "vietnamese": "Nhảy, múa", "pronunciation": "/dɑːns/" },
+  { "english": "Drama", "vietnamese": "Kịch", "pronunciation": "/ˈdrɑː.mə/" },
+  { "english": "Exhibition", "vietnamese": "Buổi triển lãm", "pronunciation": "/ˌek.sɪˈbɪʃ.ən/" },
+  { "english": "Festival", "vietnamese": "Lễ hội", "pronunciation": "/ˈfes.tɪ.vəl/" },
+  { "english": "Film", "vietnamese": "Phim", "pronunciation": "/fɪlm/" },
+  { "english": "Game", "vietnamese": "Trò chơi", "pronunciation": "/ɡeɪm/" },
+  { "english": "Hobby", "vietnamese": "Sở thích", "pronunciation": "/ˈhɒb.i/" },
+  { "english": "Humor", "vietnamese": "Sự hài hước", "pronunciation": "/ˈhjuː.mər/" },
+  { "english": "Magic", "vietnamese": "Ảo thuật", "pronunciation": "/ˈmædʒ.ɪk/" },
+  { "english": "Movie", "vietnamese": "Phim (điện ảnh)", "pronunciation": "/ˈmuː.vi/" },
+  { "english": "Music", "vietnamese": "Âm nhạc", "pronunciation": "/ˈmjuː.zɪk/" },
+  { "english": "Party", "vietnamese": "Bữa tiệc", "pronunciation": "/ˈpɑː.ti/" },
+  { "english": "Photography", "vietnamese": "Nhiếp ảnh", "pronunciation": "/fəˈtɒɡ.rə.fi/" },
+  { "english": "Show", "vietnamese": "Chương trình", "pronunciation": "/ʃəʊ/" },
+  { "english": "Theater", "vietnamese": "Nhà hát", "pronunciation": "/ˈθɪə.tər/" }
+]

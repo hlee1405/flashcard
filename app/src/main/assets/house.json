@@ -1,0 +1,21 @@
+[
+  { "english": "Balcony", "vietnamese": "Ban công", "pronunciation": "/ˈbæl.kə.ni/" },
+  { "english": "Basement", "vietnamese": "Tầng hầm", "pronunciation": "/ˈbeɪs.mənt/" },
+  { "english": "Bathroom", "vietnamese": "Phòng tắm", "pronunciation": "/ˈbɑːθ.ruːm/" },
+  { "english": "Bedroom", "vietnamese": "Phòng ngủ", "pronunciation": "/ˈbed.ruːm/" },
+  { "english": "Ceiling", "vietnamese": "Trần nhà", "pronunciation": "/ˈsiː.lɪŋ/" },
+  { "english": "Chair", "vietnamese": "Cái ghế", "pronunciation": "/tʃeər/" },
+  { "english": "Door", "vietnamese": "Cửa ra vào", "pronunciation": "/dɔːr/" },
+  { "english": "Floor", "vietnamese": "Sàn nhà", "pronunciation": "/flɔːr/" },
+  { "english": "Furniture", "vietnamese": "Đồ nội thất", "pronunciation": "/ˈfɜː.nɪ.tʃər/" },
+  { "english": "Garage", "vietnamese": "Nhà để xe", "pronunciation": "/ˈɡær.ɑːʒ/" },
+  { "english": "Garden", "vietnamese": "Khu vườn", "pronunciation": "/ˈɡɑː.dən/" },
+  { "english": "Kitchen", "vietnamese": "Nhà bếp", "pronunciation": "/ˈkɪtʃ.ən/" },
+  { "english": "Living room", "vietnamese": "Phòng khách", "pronunciation": "/ˈlɪv.ɪŋ ˌruːm/" },
+  { "english": "Roof", "vietnamese": "Mái nhà", "pronunciation": "/ruːf/" },
+  { "english": "Sofa", "vietnamese": "Ghế sô-pha", "pronunciation": "/ˈsəʊ.fə/" },
+  { "english": "Stairs", "vietnamese": "Cầu thang", "pronunciation": "/steəz/" },
+  { "english": "Table", "vietnamese": "Cái bàn", "pronunciation": "/ˈteɪ.bəl/" },
+  { "english": "Wall", "vietnamese": "Bức tường", "pronunciation": "/wɔːl/" },
+  { "english": "Window", "vietnamese": "Cửa sổ", "pronunciation": "/ˈwɪn.dəʊ/" }
+]

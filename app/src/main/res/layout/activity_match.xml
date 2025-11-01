@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F4F7"
+    tools:context=".MatchActivity">
+
+    <TextView
+        android:id="@+id/tvMatchTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ghép đôi từ và nghĩa"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tvMatchTitle"
+        android:layout_above="@id/btnReplay"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/btnReplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chơi lại"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"/>
+</RelativeLayout>
