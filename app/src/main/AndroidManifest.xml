@@ -33,6 +33,11 @@
             android:name=".MatchActivity"
             android:exported="false" />
 
+        <!-- VocabularyListActivity để hiển thị danh sách từ vựng -->
+        <activity
+            android:name=".VocabularyListActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

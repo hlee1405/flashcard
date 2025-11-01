@@ -9,8 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.flashcard.model.Word;
+import com.example.flashcard.util.VocabularyDataManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +30,7 @@ public class StudyActivity extends AppCompatActivity {
 
     private List<Word> wordList;
     private int currentWordIndex = 0;
+    private VocabularyDataManager dataManager;
 
     // Các thành phần UI
     private TextView tvEnglish, tvVietnamese, tvPronunciation;
@@ -40,9 +45,45 @@ public class StudyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study);
 
+        dataManager = new VocabularyDataManager(this);
+
+        // Xử lý window insets để tránh nội dung bị che
+        View mainContent = findViewById(R.id.mainContent);
+        View navigationButtons = findViewById(R.id.navigation_buttons);
+        
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
+            int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
+            int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+            
+            // Thêm padding top cho main content để tránh bị che bởi status bar
+            if (mainContent != null) {
+                float density = getResources().getDisplayMetrics().density;
+                int paddingTopDp = (int) (20 * density);
+                mainContent.setPadding(
+                    mainContent.getPaddingLeft(),
+                    paddingTopDp + top,
+                    mainContent.getPaddingRight(),
+                    mainContent.getPaddingBottom()
+                );
+            }
+            
+            // Thêm padding bottom cho navigation buttons để tránh bị che bởi navigation bar
+            if (navigationButtons != null) {
+                float density = getResources().getDisplayMetrics().density;
+                int paddingBottomDp = (int) (16 * density);
+                navigationButtons.setPadding(
+                    navigationButtons.getPaddingLeft(),
+                    navigationButtons.getPaddingTop(),
+                    navigationButtons.getPaddingRight(),
+                    paddingBottomDp + bottom
+                );
+            }
+            return windowInsets;
+        });
+
         // Lấy tên file JSON từ Intent
         String jsonFileName = getIntent().getStringExtra("JSON_FILE_NAME");
-        loadWordsFromJson(jsonFileName);
+        loadWords(jsonFileName);
 
         initViews();
         setupTextToSpeech();
@@ -85,15 +126,42 @@ public class StudyActivity extends AppCompatActivity {
         btnSpeak.setOnClickListener(v -> speakWord(tvEnglish.getText().toString()));
     }
 
-    private void loadWordsFromJson(String fileName) {
-        try (InputStream is = getAssets().open(fileName);
-             InputStreamReader reader = new InputStreamReader(is)) {
-
-            Type listType = new TypeToken<List<Word>>() {}.getType();
-            wordList = new Gson().fromJson(reader, listType);
-        } catch (IOException e) {
-            e.printStackTrace();
-            wordList = null;
+    /**
+     * Load từ vựng từ cả assets và user data
+     */
+    private void loadWords(String fileName) {
+        wordList = new ArrayList<>();
+        
+        // Kiểm tra xem có phải bộ từ vựng do user tạo không
+        boolean isUserCreated = dataManager.isUserCreatedSet(fileName);
+        
+        if (isUserCreated) {
+            // Load từ user data
+            wordList = dataManager.getWordsForSet(fileName);
+        } else {
+            // Load từ assets
+            try {
+                InputStream is = getAssets().open(fileName);
+                InputStreamReader reader = new InputStreamReader(is);
+                Type listType = new TypeToken<List<Word>>() {}.getType();
+                List<Word> assetWords = new Gson().fromJson(reader, listType);
+                reader.close();
+                is.close();
+                
+                if (assetWords != null) {
+                    wordList.addAll(assetWords);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            // Load thêm từ user data nếu có
+            List<Word> userWords = dataManager.getWordsForSet(fileName);
+            wordList.addAll(userWords);
+        }
+        
+        if (wordList == null) {
+            wordList = new ArrayList<>();
         }
     }
 

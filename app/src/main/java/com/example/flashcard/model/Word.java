@@ -10,6 +10,7 @@ public class Word implements Serializable {
     private String vietnamese;
     private String pronunciation;
 
+
     public Word(String english, String vietnamese, String pronunciation) {
         this.english = english;
         this.vietnamese = vietnamese;

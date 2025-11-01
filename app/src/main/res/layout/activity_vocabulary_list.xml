@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F4F7"
-    android:fitsSystemWindows="false"
-    tools:context=".MainActivity">
+    android:background="@color/white"
+    android:fitsSystemWindows="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvHeader"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chọn bộ từ vựng"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:minHeight="?attr/actionBarSize"
             android:background="@color/green_primary"
-            android:elevation="4dp"/>
+            android:elevation="4dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="16dp"
+            app:titleTextColor="@color/white"
+            app:navigationIconTint="@color/white"
+            app:contentInsetStart="16dp"
+            app:contentInsetStartWithNavigation="16dp" />
 
+        <!-- RecyclerView for word list -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewSets"
+            android:id="@+id/recyclerViewWords"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
+            android:paddingTop="8dp"
             android:paddingBottom="8dp" />
 
-        <!-- Container cho nút thêm bộ từ vựng -->
+        <!-- Container cho nút thêm từ vựng -->
         <LinearLayout
-            android:id="@+id/addVocabularySetContainer"
+            android:id="@+id/addWordContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -52,7 +51,7 @@
 
             <!-- Nút "Thêm từ" -->
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnAddVocabularySet"
+                android:id="@+id/btnAddWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thêm từ"
@@ -70,3 +69,4 @@
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

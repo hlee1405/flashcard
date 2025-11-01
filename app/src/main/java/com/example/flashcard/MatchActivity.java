@@ -6,18 +6,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcard.adapter.MatchAdapter;
 import com.example.flashcard.model.MatchCard;
 import com.example.flashcard.model.Word;
+import com.example.flashcard.util.VocabularyDataManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -41,6 +46,7 @@ public class MatchActivity extends AppCompatActivity {
     private int matchedPairs = 0;
     private final int PAIRS_TO_MATCH = 5;
     private boolean isChecking = false;
+    private VocabularyDataManager dataManager;
 
     // ... (onCreate, loadWordsFromJson, setupNewGame không đổi)
     @Override
@@ -48,11 +54,54 @@ public class MatchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match);
 
+        dataManager = new VocabularyDataManager(this);
+        
         String jsonFileName = getIntent().getStringExtra("JSON_FILE_NAME");
-        loadWordsFromJson(jsonFileName);
+        loadWords(jsonFileName);
 
         recyclerView = findViewById(R.id.gridRecyclerView);
         Button btnReplay = findViewById(R.id.btnReplay);
+        TextView tvMatchTitle = findViewById(R.id.tvMatchTitle);
+
+        // Xử lý window insets để tránh nội dung bị che
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
+            int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
+            int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+            
+            // Thêm padding top cho title để tránh bị che bởi status bar
+            if (tvMatchTitle != null) {
+                float density = getResources().getDisplayMetrics().density;
+                int paddingTopDp = (int) (20 * density);
+                tvMatchTitle.setPadding(
+                    tvMatchTitle.getPaddingLeft(),
+                    paddingTopDp + top,
+                    tvMatchTitle.getPaddingRight(),
+                    tvMatchTitle.getPaddingBottom()
+                );
+            }
+            
+            // Thêm padding bottom cho RecyclerView và button để tránh bị che bởi navigation bar
+            if (recyclerView != null) {
+                float density = getResources().getDisplayMetrics().density;
+                int paddingBottomDp = (int) (24 * density);
+                recyclerView.setPadding(
+                    recyclerView.getPaddingLeft(),
+                    recyclerView.getPaddingTop(),
+                    recyclerView.getPaddingRight(),
+                    recyclerView.getPaddingBottom() + paddingBottomDp
+                );
+            }
+            
+            if (btnReplay != null) {
+                float density = getResources().getDisplayMetrics().density;
+                int marginBottomDp = (int) (20 * density);
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) btnReplay.getLayoutParams();
+                params.bottomMargin = marginBottomDp + bottom;
+                btnReplay.setLayoutParams(params);
+            }
+            
+            return windowInsets;
+        });
 
         if (fullWordList == null || fullWordList.size() < PAIRS_TO_MATCH) {
             Toast.makeText(this, "Không đủ từ vựng để chơi (cần ít nhất 5 từ)", Toast.LENGTH_LONG).show();
@@ -64,16 +113,42 @@ public class MatchActivity extends AppCompatActivity {
         btnReplay.setOnClickListener(v -> setupNewGame());
     }
 
-    private void loadWordsFromJson(String fileName) {
-        try {
-            InputStream is = getAssets().open(fileName);
-            InputStreamReader reader = new InputStreamReader(is);
-            Type listType = new TypeToken<List<Word>>() {}.getType();
-            fullWordList = new Gson().fromJson(reader, listType);
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fullWordList = null;
+    /**
+     * Load từ vựng từ cả assets và user data
+     */
+    private void loadWords(String fileName) {
+        fullWordList = new ArrayList<>();
+        
+        // Kiểm tra xem có phải bộ từ vựng do user tạo không
+        boolean isUserCreated = dataManager.isUserCreatedSet(fileName);
+        
+        if (isUserCreated) {
+            // Load từ user data
+            fullWordList = dataManager.getWordsForSet(fileName);
+        } else {
+            // Load từ assets
+            try {
+                InputStream is = getAssets().open(fileName);
+                InputStreamReader reader = new InputStreamReader(is);
+                Type listType = new TypeToken<List<Word>>() {}.getType();
+                List<Word> assetWords = new Gson().fromJson(reader, listType);
+                reader.close();
+                is.close();
+                
+                if (assetWords != null) {
+                    fullWordList.addAll(assetWords);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            // Load thêm từ user data nếu có
+            List<Word> userWords = dataManager.getWordsForSet(fileName);
+            fullWordList.addAll(userWords);
+        }
+        
+        if (fullWordList == null) {
+            fullWordList = new ArrayList<>();
         }
     }
 
