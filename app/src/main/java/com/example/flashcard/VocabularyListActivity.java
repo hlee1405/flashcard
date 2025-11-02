@@ -113,13 +113,23 @@ public class VocabularyListActivity extends AppCompatActivity {
             
             // Thêm padding bottom cho container nút thêm để tránh bị che bởi navigation bar
             if (addWordContainer != null) {
-                int paddingBottomDp = (int) (12 * density);
+                int paddingBottomDp = (int) (32 * density); // Tăng padding lên 32dp để đảm bảo không bị che
                 addWordContainer.setPadding(
                     addWordContainer.getPaddingLeft(),
                     addWordContainer.getPaddingTop(),
                     addWordContainer.getPaddingRight(),
                     bottom + paddingBottomDp
                 );
+            }
+            
+            // Thêm margin bottom cho button để đảm bảo không bị che
+            if (btnAddWord != null) {
+                android.view.ViewGroup.MarginLayoutParams params = (android.view.ViewGroup.MarginLayoutParams) btnAddWord.getLayoutParams();
+                if (params != null) {
+                    int marginBottomDp = (int) (4 * density);
+                    params.bottomMargin = bottom + marginBottomDp;
+                    btnAddWord.setLayoutParams(params);
+                }
             }
             
             // Thêm padding bottom cho RecyclerView để tránh bị che bởi navigation bar

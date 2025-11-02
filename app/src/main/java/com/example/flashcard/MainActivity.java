@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.Button;
+import android.widget.TextView;
 import com.example.flashcard.adapter.VocabularySetAdapter;
 import com.example.flashcard.dialog.AddVocabularySetDialog;
 import com.example.flashcard.dialog.EditVocabularySetDialog;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         float density = getResources().getDisplayMetrics().density;
         int headerPaddingTopDp = (int) (20 * density); // 20dp padding gốc
         
+        // Tìm LinearLayout bên trong CardView để set padding
+        android.widget.LinearLayout buttonContainerLayout = findViewById(R.id.buttonContainerLayout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
             int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
             int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
@@ -77,14 +80,14 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
             
-            // Thêm padding bottom cho container nút thêm để tránh bị che bởi navigation bar
-            if (addVocabularySetContainer != null) {
-                int paddingBottomDp = (int) (12 * density);
-                addVocabularySetContainer.setPadding(
-                    addVocabularySetContainer.getPaddingLeft(),
-                    addVocabularySetContainer.getPaddingTop(),
-                    addVocabularySetContainer.getPaddingRight(),
-                    bottom + paddingBottomDp
+            // Thêm padding bottom cho LinearLayout bên trong container nút thêm để tránh bị che bởi navigation bar
+            if (buttonContainerLayout != null) {
+                int paddingBottomDp = (int) (28 * density); // 28dp padding base để đảm bảo không bị che
+                buttonContainerLayout.setPadding(
+                    buttonContainerLayout.getPaddingLeft(),
+                    buttonContainerLayout.getPaddingTop(),
+                    buttonContainerLayout.getPaddingRight(),
+                    paddingBottomDp + bottom
                 );
             }
             
@@ -282,23 +285,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showModeSelectionDialog(VocabularySet set) {
-        final String[] modes = {"Chế độ Học", "Chế độ Ghép đôi"};
+        android.view.LayoutInflater inflater = getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.dialog_mode_selection, null);
+        
+        TextView tvTitle = dialogView.findViewById(R.id.tvTitle);
+        TextView tvSubtitle = dialogView.findViewById(R.id.tvSubtitle);
+        androidx.cardview.widget.CardView cardLearningMode = dialogView.findViewById(R.id.cardLearningMode);
+        androidx.cardview.widget.CardView cardMatchingMode = dialogView.findViewById(R.id.cardMatchingMode);
+        
+        tvSubtitle.setText("Bộ từ vựng: " + set.getTitle());
+        
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chọn chế độ cho bộ '" + set.getTitle() + "'")
-                .setItems(modes, (dialog, which) -> {
-                    if (which == 0) {
-                        // Chế độ Học
-                        Intent intent = new Intent(MainActivity.this, StudyActivity.class);
-                        intent.putExtra("JSON_FILE_NAME", set.getJsonFileName());
-                        startActivity(intent);
-                    } else {
-                        // Chế độ Ghép đôi
-                        Intent intent = new Intent(MainActivity.this, MatchActivity.class);
-                        intent.putExtra("JSON_FILE_NAME", set.getJsonFileName());
-                        startActivity(intent);
-                    }
-                });
-        builder.create().show();
+        builder.setView(dialogView);
+        
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        
+        cardLearningMode.setOnClickListener(v -> {
+            dialog.dismiss();
+            Intent intent = new Intent(MainActivity.this, StudyActivity.class);
+            intent.putExtra("JSON_FILE_NAME", set.getJsonFileName());
+            startActivity(intent);
+        });
+        
+        cardMatchingMode.setOnClickListener(v -> {
+            dialog.dismiss();
+            Intent intent = new Intent(MainActivity.this, MatchActivity.class);
+            intent.putExtra("JSON_FILE_NAME", set.getJsonFileName());
+            startActivity(intent);
+        });
+        
+        dialog.show();
     }
     
     private void showEditVocabularySetDialog(VocabularySet set) {

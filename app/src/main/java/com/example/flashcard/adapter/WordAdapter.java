@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcard.R;
@@ -64,12 +65,21 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             holder.tvPronunciation.setVisibility(View.GONE);
         }
         
-        // Xử lý click vào speaker icon
-        holder.ivSpeaker.setOnClickListener(v -> {
-            if (speakerClickListener != null) {
-                speakerClickListener.onSpeakerClick(word.getEnglish());
-            }
-        });
+        // Xử lý click vào speaker icon (click vào container để có vùng click lớn hơn)
+        if (holder.speakerButtonContainer != null) {
+            holder.speakerButtonContainer.setOnClickListener(v -> {
+                if (speakerClickListener != null) {
+                    speakerClickListener.onSpeakerClick(word.getEnglish());
+                }
+            });
+        } else {
+            // Fallback: click vào ImageView nếu không tìm thấy container
+            holder.ivSpeaker.setOnClickListener(v -> {
+                if (speakerClickListener != null) {
+                    speakerClickListener.onSpeakerClick(word.getEnglish());
+                }
+            });
+        }
         
         // Xử lý long click vào item
         holder.itemView.setOnLongClickListener(v -> {
@@ -91,6 +101,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
         TextView tvEnglish;
         TextView tvPronunciation;
         ImageView ivSpeaker;
+        CardView speakerButtonContainer;
 
         public WordViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +109,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             tvEnglish = itemView.findViewById(R.id.tvEnglish);
             tvPronunciation = itemView.findViewById(R.id.tvPronunciation);
             ivSpeaker = itemView.findViewById(R.id.ivSpeaker);
+            speakerButtonContainer = itemView.findViewById(R.id.speakerButtonContainer);
         }
     }
 }
