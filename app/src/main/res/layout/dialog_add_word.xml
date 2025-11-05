@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/surface_white"
+    android:elevation="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:background="@color/surface_white">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm từ vựng mới"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.01"
+            android:gravity="start"
+            android:layout_marginBottom="24dp" />
+
+        <!-- English Input -->
+        <EditText
+            android:id="@+id/etEnglish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Từ tiếng Anh"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:textColorHint="@color/text_secondary"
+            android:textColor="@color/text_primary"
+            android:padding="16dp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_input_field"
+            android:fontFamily="sans-serif" />
+
+        <!-- Vietnamese Input -->
+        <EditText
+            android:id="@+id/etVietnamese"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nghĩa tiếng Việt"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:textColorHint="@color/text_secondary"
+            android:textColor="@color/text_primary"
+            android:padding="16dp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_input_field"
+            android:fontFamily="sans-serif" />
+
+        <!-- Pronunciation Input -->
+        <EditText
+            android:id="@+id/etPronunciation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phiên âm (tùy chọn)"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:textColorHint="@color/text_secondary"
+            android:textColor="@color/text_primary"
+            android:padding="16dp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/rounded_input_field"
+            android:fontFamily="sans-serif" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="8dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Hủy"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_button_red"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:minWidth="80dp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:ellipsize="none"
+                android:maxLines="1"
+                android:elevation="2dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAdd"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Thêm"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_button_green"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:minWidth="80dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:ellipsize="none"
+                android:maxLines="1"
+                android:elevation="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
