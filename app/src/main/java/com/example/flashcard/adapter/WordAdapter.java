@@ -51,13 +51,10 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
     public void onBindViewHolder(@NonNull WordViewHolder holder, int position) {
         Word word = wordList.get(position);
         
-        // Hiển thị từ tiếng Việt
         holder.tvVietnamese.setText(word.getVietnamese());
         
-        // Hiển thị từ tiếng Anh
         holder.tvEnglish.setText(word.getEnglish());
         
-        // Hiển thị phiên âm
         if (word.getPronunciation() != null && !word.getPronunciation().isEmpty()) {
             holder.tvPronunciation.setText("[" + word.getPronunciation() + "]");
             holder.tvPronunciation.setVisibility(View.VISIBLE);
@@ -65,7 +62,6 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             holder.tvPronunciation.setVisibility(View.GONE);
         }
         
-        // Xử lý click vào speaker icon (click vào container để có vùng click lớn hơn)
         if (holder.speakerButtonContainer != null) {
             holder.speakerButtonContainer.setOnClickListener(v -> {
                 if (speakerClickListener != null) {
@@ -73,7 +69,6 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
                 }
             });
         } else {
-            // Fallback: click vào ImageView nếu không tìm thấy container
             holder.ivSpeaker.setOnClickListener(v -> {
                 if (speakerClickListener != null) {
                     speakerClickListener.onSpeakerClick(word.getEnglish());
@@ -81,7 +76,6 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             });
         }
         
-        // Xử lý long click vào item
         holder.itemView.setOnLongClickListener(v -> {
             if (longClickListener != null) {
                 longClickListener.onItemLongClick(word, position);

@@ -50,7 +50,6 @@ public class EditVocabularySetDialog extends Dialog {
         Button btnSave = findViewById(R.id.btnSave);
         Button btnDelete = findViewById(R.id.btnDelete);
         
-        // Điền dữ liệu hiện tại
         etTitle.setText(vocabularySet.getTitle());
         
         btnCancel.setOnClickListener(v -> dismiss());
@@ -93,5 +92,8 @@ public class EditVocabularySetDialog extends Dialog {
         });
     }
 }
+
+
+
 
 

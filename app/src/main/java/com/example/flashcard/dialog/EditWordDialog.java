@@ -54,7 +54,6 @@ public class EditWordDialog extends Dialog {
         Button btnSave = findViewById(R.id.btnSave);
         Button btnDelete = findViewById(R.id.btnDelete);
         
-        // Điền dữ liệu hiện tại
         etEnglish.setText(word.getEnglish());
         etVietnamese.setText(word.getVietnamese());
         if (word.getPronunciation() != null) {
@@ -108,5 +107,8 @@ public class EditWordDialog extends Dialog {
         });
     }
 }
+
+
+
 
 

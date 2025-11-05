@@ -24,7 +24,6 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp">
 
-            <!-- THẺ TRÊN: TỪ TIẾNG ANH, PHIÊN ÂM VÀ NÚT PHÁT ÂM -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -38,7 +37,6 @@
                     android:layout_height="match_parent"
                     android:padding="16dp">
 
-                    <!-- Nút phát âm -->
                     <ImageButton
                         android:id="@+id/btnSpeak"
                         android:layout_width="48dp"
@@ -50,7 +48,6 @@
                         android:contentDescription="Phát âm"
                         app:tint="#555555" />
 
-                    <!-- Cụm từ và phiên âm -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -80,7 +77,6 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- THẺ DƯỚI: NGHĨA TIẾNG VIỆT -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -102,7 +98,6 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Nút điều hướng -->
         <LinearLayout
             android:id="@+id/navigation_buttons"
             android:layout_width="match_parent"

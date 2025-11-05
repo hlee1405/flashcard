@@ -44,7 +44,6 @@ public class VocabularyListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Set status bar color to green
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.green_primary, null));
             getWindow().getDecorView().setSystemUiVisibility(
@@ -56,11 +55,9 @@ public class VocabularyListActivity extends AppCompatActivity {
 
         dataManager = new VocabularyDataManager(this);
         
-        // Lấy tên file JSON từ Intent
         jsonFileName = getIntent().getStringExtra("JSON_FILE_NAME");
         categoryTitle = getIntent().getStringExtra("CATEGORY_TITLE");
 
-        // Setup toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -68,7 +65,6 @@ public class VocabularyListActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        // Đảm bảo nút back có màu trắng
         if (toolbar.getNavigationIcon() != null) {
             android.graphics.drawable.Drawable navigationIcon = toolbar.getNavigationIcon();
             navigationIcon = DrawableCompat.wrap(navigationIcon);
@@ -77,43 +73,36 @@ public class VocabularyListActivity extends AppCompatActivity {
         }
         toolbar.setNavigationOnClickListener(v -> finish());
         
-        // Load từ vựng từ JSON hoặc user data
         loadWords();
 
-        // Setup RecyclerView
         recyclerView = findViewById(R.id.recyclerViewWords);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new WordAdapter(wordList, this::speakWord, (word, position) -> {
-            // Long click để chỉnh sửa/xóa từ vựng
             showEditWordDialog(word);
         });
         recyclerView.setAdapter(adapter);
         
-        // Nút thêm từ vựng
         Button btnAddWord = findViewById(R.id.btnAddWord);
         btnAddWord.setOnClickListener(v -> showAddWordDialog());
 
-        // Xử lý window insets để toolbar không bị che, RecyclerView không bị che
         View addWordContainer = findViewById(R.id.addWordContainer);
         float density = getResources().getDisplayMetrics().density;
-        int paddingTopDp = (int) (8 * density); // 8dp chuyển sang pixel
+        int paddingTopDp = (int) (8 * density);
         
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
             int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
             int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
             
-            // Thêm padding top cho toolbar để kéo dài lên status bar và không bị che chữ
             toolbar.setPadding(
                 toolbar.getPaddingLeft(),
-                top + paddingTopDp, // Status bar height + 8dp padding
+                top + paddingTopDp,
                 toolbar.getPaddingRight(),
                 toolbar.getPaddingBottom()
             );
             
-            // Thêm padding bottom cho container nút thêm để tránh bị che bởi navigation bar
             if (addWordContainer != null) {
-                int paddingBottomDp = (int) (32 * density); // Tăng padding lên 32dp để đảm bảo không bị che
+                int paddingBottomDp = (int) (32 * density);
                 addWordContainer.setPadding(
                     addWordContainer.getPaddingLeft(),
                     addWordContainer.getPaddingTop(),
@@ -122,7 +111,6 @@ public class VocabularyListActivity extends AppCompatActivity {
                 );
             }
             
-            // Thêm margin bottom cho button để đảm bảo không bị che
             if (btnAddWord != null) {
                 android.view.ViewGroup.MarginLayoutParams params = (android.view.ViewGroup.MarginLayoutParams) btnAddWord.getLayoutParams();
                 if (params != null) {
@@ -132,7 +120,6 @@ public class VocabularyListActivity extends AppCompatActivity {
                 }
             }
             
-            // Thêm padding bottom cho RecyclerView để tránh bị che bởi navigation bar
             int paddingBottomDp = (int) (24 * density);
             recyclerView.setPadding(
                 recyclerView.getPaddingLeft(),
@@ -144,24 +131,17 @@ public class VocabularyListActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        // Setup TextToSpeech
         setupTextToSpeech();
     }
 
-    /**
-     * Load từ vựng từ cả assets và user data
-     */
     private void loadWords() {
         wordList = new ArrayList<>();
         
-        // Kiểm tra xem có phải bộ từ vựng do user tạo không
         boolean isUserCreated = dataManager.isUserCreatedSet(jsonFileName);
         
         if (isUserCreated) {
-            // Load từ user data
             wordList = dataManager.getWordsForSet(jsonFileName);
         } else {
-            // Load từ assets
             try {
                 InputStream is = getAssets().open(jsonFileName);
                 InputStreamReader reader = new InputStreamReader(is);
@@ -179,7 +159,6 @@ public class VocabularyListActivity extends AppCompatActivity {
             }
         }
         
-        // Load thêm từ user data nếu có (có thể user đã thêm từ vào bộ assets)
         if (!isUserCreated) {
             List<Word> userWords = dataManager.getWordsForSet(jsonFileName);
             wordList.addAll(userWords);
@@ -189,16 +168,12 @@ public class VocabularyListActivity extends AppCompatActivity {
             Toast.makeText(this, "Không có từ vựng nào!", Toast.LENGTH_SHORT).show();
         }
     }
-    
-    /**
-     * Hiển thị dialog để thêm từ vựng mới
-     */
+
     private void showAddWordDialog() {
         AddWordDialog dialog = new AddWordDialog(
             this,
             jsonFileName,
             word -> {
-                // Sau khi thêm thành công, reload danh sách
                 loadWords();
                 adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
                     showEditWordDialog(w);
@@ -212,7 +187,6 @@ public class VocabularyListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload khi quay lại màn hình này
         loadWords();
         if (adapter != null && wordList != null) {
             adapter = new WordAdapter(wordList, this::speakWord, (word, position) -> {
@@ -244,7 +218,6 @@ public class VocabularyListActivity extends AppCompatActivity {
             jsonFileName,
             word,
             updatedWord -> {
-                // Sau khi cập nhật, reload danh sách
                 loadWords();
                 adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
                     showEditWordDialog(w);
@@ -252,7 +225,6 @@ public class VocabularyListActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
             },
             deletedWord -> {
-                // Sau khi xóa, reload danh sách
                 loadWords();
                 adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
                     showEditWordDialog(w);

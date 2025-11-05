@@ -16,8 +16,8 @@ import java.util.List;
 
 public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdapter.SetViewHolder> {
 
-    private List<VocabularySet> displayedSets; // Danh sách đang hiển thị (sẽ được lọc)
-    private final List<VocabularySet> allSets; // Danh sách gốc đầy đủ
+    private List<VocabularySet> displayedSets;
+    private final List<VocabularySet> allSets;
     private final OnItemClickListener listener;
     private final OnPlayButtonClickListener playButtonListener;
     private final OnItemLongClickListener longClickListener;
@@ -35,7 +35,6 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
     }
 
     public VocabularySetAdapter(List<VocabularySet> vocabularySets, OnItemClickListener listener, OnPlayButtonClickListener playButtonListener) {
-        // Lưu trữ danh sách gốc và khởi tạo danh sách hiển thị
         this.allSets = new ArrayList<>(vocabularySets);
         this.displayedSets = vocabularySets;
         this.listener = listener;
@@ -44,7 +43,6 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
     }
     
     public VocabularySetAdapter(List<VocabularySet> vocabularySets, OnItemClickListener listener, OnPlayButtonClickListener playButtonListener, OnItemLongClickListener longClickListener) {
-        // Lưu trữ danh sách gốc và khởi tạo danh sách hiển thị
         this.allSets = new ArrayList<>(vocabularySets);
         this.displayedSets = vocabularySets;
         this.listener = listener;
@@ -61,21 +59,17 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
 
     @Override
     public void onBindViewHolder(@NonNull SetViewHolder holder, int position) {
-        // Sử dụng displayedSets cho việc hiển thị
         VocabularySet set = displayedSets.get(position);
         holder.tvSetTitle.setText(set.getTitle());
         
-        // Hiển thị word count
         holder.tvWordCount.setText(set.getWordCount() + " từ");
         
-        // Xử lý click vào item (không phải play button)
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(set);
             }
         });
         
-        // Xử lý long click vào item
         holder.itemView.setOnLongClickListener(v -> {
             if (longClickListener != null) {
                 longClickListener.onItemLongClick(set);
@@ -84,7 +78,6 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
             return false;
         });
         
-        // Xử lý click vào play button
         holder.playButtonContainer.setOnClickListener(v -> {
             if (playButtonListener != null) {
                 playButtonListener.onPlayButtonClick(set);
@@ -94,20 +87,15 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
 
     @Override
     public int getItemCount() {
-        return displayedSets.size(); // Trả về kích thước của danh sách đang hiển thị
+        return displayedSets.size();
     }
 
-    /**
-     * Lọc danh sách bộ từ vựng dựa trên từ khóa tìm kiếm.
-     * @param text Từ khóa tìm kiếm.
-     */
+
     public void filterList(String text) {
         displayedSets = new ArrayList<>();
         if (text.isEmpty()) {
-            // Nếu không có từ khóa, hiển thị toàn bộ danh sách
             displayedSets.addAll(allSets);
         } else {
-            // Lọc danh sách dựa trên tiêu đề
             text = text.toLowerCase().trim();
             for (VocabularySet item : allSets) {
                 if (item.getTitle().toLowerCase().contains(text)) {
@@ -115,7 +103,7 @@ public class VocabularySetAdapter extends RecyclerView.Adapter<VocabularySetAdap
                 }
             }
         }
-        notifyDataSetChanged(); // Cập nhật RecyclerView
+        notifyDataSetChanged();
     }
 
     static class SetViewHolder extends RecyclerView.ViewHolder {

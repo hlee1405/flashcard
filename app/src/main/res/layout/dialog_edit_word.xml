@@ -15,7 +15,6 @@
         android:padding="28dp"
         android:background="@color/surface_white">
 
-        <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +27,6 @@
             android:gravity="center"
             android:layout_marginBottom="24dp" />
 
-        <!-- English Input -->
         <EditText
             android:id="@+id/etEnglish"
             android:layout_width="match_parent"
@@ -44,7 +42,6 @@
             android:background="@drawable/rounded_input_field"
             android:fontFamily="sans-serif" />
 
-        <!-- Vietnamese Input -->
         <EditText
             android:id="@+id/etVietnamese"
             android:layout_width="match_parent"
@@ -60,7 +57,6 @@
             android:background="@drawable/rounded_input_field"
             android:fontFamily="sans-serif" />
 
-        <!-- Pronunciation Input -->
         <EditText
             android:id="@+id/etPronunciation"
             android:layout_width="match_parent"
@@ -76,7 +72,6 @@
             android:background="@drawable/rounded_input_field"
             android:fontFamily="sans-serif" />
 
-        <!-- Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,7 +123,6 @@
                 android:elevation="2dp" />
         </LinearLayout>
         
-        <!-- Delete Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnDelete"
             android:layout_width="match_parent"

@@ -49,7 +49,6 @@ public class AddVocabularySetDialog extends Dialog {
                 return;
             }
             
-            // Tạo tên file JSON duy nhất
             String fileName = "user_" + System.currentTimeMillis() + ".json";
             
             VocabularySet newSet = new VocabularySet(title, fileName, 0);

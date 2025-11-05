@@ -1,6 +1,5 @@
 package com.example.flashcard;
 
-// ... (Các import không đổi)
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +36,6 @@ import java.util.List;
 
 public class MatchActivity extends AppCompatActivity {
 
-    // ... (Các biến khai báo không đổi)
     private List<Word> fullWordList;
     private List<MatchCard> currentMatchCards;
     private MatchAdapter adapter;
@@ -48,7 +46,6 @@ public class MatchActivity extends AppCompatActivity {
     private boolean isChecking = false;
     private VocabularyDataManager dataManager;
 
-    // ... (onCreate, loadWordsFromJson, setupNewGame không đổi)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,12 +60,10 @@ public class MatchActivity extends AppCompatActivity {
         Button btnReplay = findViewById(R.id.btnReplay);
         TextView tvMatchTitle = findViewById(R.id.tvMatchTitle);
 
-        // Xử lý window insets để tránh nội dung bị che
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
             int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
             int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
             
-            // Thêm padding top cho title để tránh bị che bởi status bar
             if (tvMatchTitle != null) {
                 float density = getResources().getDisplayMetrics().density;
                 int paddingTopDp = (int) (20 * density);
@@ -80,7 +75,6 @@ public class MatchActivity extends AppCompatActivity {
                 );
             }
             
-            // Thêm padding bottom cho RecyclerView và button để tránh bị che bởi navigation bar
             if (recyclerView != null) {
                 float density = getResources().getDisplayMetrics().density;
                 int paddingBottomDp = (int) (24 * density);
@@ -113,20 +107,14 @@ public class MatchActivity extends AppCompatActivity {
         btnReplay.setOnClickListener(v -> setupNewGame());
     }
 
-    /**
-     * Load từ vựng từ cả assets và user data
-     */
     private void loadWords(String fileName) {
         fullWordList = new ArrayList<>();
         
-        // Kiểm tra xem có phải bộ từ vựng do user tạo không
         boolean isUserCreated = dataManager.isUserCreatedSet(fileName);
         
         if (isUserCreated) {
-            // Load từ user data
             fullWordList = dataManager.getWordsForSet(fileName);
         } else {
-            // Load từ assets
             try {
                 InputStream is = getAssets().open(fileName);
                 InputStreamReader reader = new InputStreamReader(is);
@@ -142,7 +130,6 @@ public class MatchActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             
-            // Load thêm từ user data nếu có
             List<Word> userWords = dataManager.getWordsForSet(fileName);
             fullWordList.addAll(userWords);
         }
@@ -183,26 +170,22 @@ public class MatchActivity extends AppCompatActivity {
         MatchCard clickedCard = currentMatchCards.get(position);
 
         if (firstCardPosition == -1) {
-            // CHỌN THẺ ĐẦU TIÊN
             firstCardPosition = position;
             clickedCard.setFlipped(true);
             adapter.notifyItemChanged(position);
         } else {
-            // CHỌN THẺ THỨ HAI
             isChecking = true;
             MatchCard firstCard = currentMatchCards.get(firstCardPosition);
             clickedCard.setFlipped(true);
             adapter.notifyItemChanged(position);
 
             if (firstCard.getId() == clickedCard.getId()) {
-                // ✅ TRƯỜNG HỢP GHÉP ĐÚNG
-                // Bước 1: Đổi cả 2 thẻ sang màu xanh
+
                 firstCard.setCorrectPair(true);
                 clickedCard.setCorrectPair(true);
                 adapter.notifyItemChanged(firstCardPosition);
                 adapter.notifyItemChanged(position);
 
-                // Bước 2: Sau 0.5 giây, đánh dấu là đã khớp (sẽ bị ẩn đi)
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     firstCard.setMatched(true);
                     clickedCard.setMatched(true);
@@ -211,15 +194,14 @@ public class MatchActivity extends AppCompatActivity {
                     adapter.notifyItemChanged(position);
 
                     firstCardPosition = -1;
-                    isChecking = false; // Mở khóa click
+                    isChecking = false;
 
                     if (matchedPairs == PAIRS_TO_MATCH) {
                         showCompletionDialog();
                     }
-                }, 500); // Delay 0.5 giây để người dùng thấy màu xanh
+                }, 500);
 
             } else {
-                // ❌ TRƯỜNG HỢP GHÉP SAI (Logic không đổi)
                 firstCard.setWrongPair(true);
                 clickedCard.setWrongPair(true);
                 adapter.notifyItemChanged(firstCardPosition);
@@ -244,7 +226,6 @@ public class MatchActivity extends AppCompatActivity {
         }
     }
 
-    // ... (shakeCard và showCompletionDialog không đổi)
     private void shakeCard(View view) {
         if (view == null) return;
         ObjectAnimator shake = ObjectAnimator.ofFloat(view, "translationX", 0f, 25f, -25f, 25f, -25f, 15f, -15f, 6f, -6f, 0f);

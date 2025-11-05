@@ -7,7 +7,7 @@ public class MatchCard {
     private boolean isMatched = false;
     private boolean isFlipped = false;
     private boolean isWrongPair = false;
-    private boolean isCorrectPair = false; // ✅ THUỘC TÍNH MỚI ĐỂ HIỆN MÀU XANH
+    private boolean isCorrectPair = false;
 
     public MatchCard(String text, int id) {
         this.text = text;
@@ -26,7 +26,6 @@ public class MatchCard {
     public boolean isWrongPair() { return isWrongPair; }
     public void setWrongPair(boolean wrongPair) { isWrongPair = wrongPair; }
 
-    // ✅ Thêm Getter và Setter cho trạng thái mới
     public boolean isCorrectPair() { return isCorrectPair; }
     public void setCorrectPair(boolean correctPair) { isCorrectPair = correctPair; }
 }

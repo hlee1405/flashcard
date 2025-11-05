@@ -31,7 +31,6 @@
         android:clickable="false"
         android:focusable="false">
 
-        <!-- Left side: Word count with icon and category name -->
         <LinearLayout
             android:id="@+id/leftContent"
             android:layout_width="0dp"
@@ -43,7 +42,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/playButtonContainer">
 
-            <!-- Category name -->
             <TextView
                 android:id="@+id/tvSetTitle"
                 android:layout_width="wrap_content"
@@ -59,7 +57,6 @@
                 android:focusable="false"
                 tools:text="Nhà" />
 
-            <!-- Word count with icon -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,7 +92,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Right side: Enhanced Play button -->
         <androidx.cardview.widget.CardView
             android:id="@+id/playButtonContainer"
             android:layout_width="56dp"

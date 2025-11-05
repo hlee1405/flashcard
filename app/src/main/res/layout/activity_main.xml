@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Modern Header with Gradient -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +55,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Content Area -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewSets"
             android:layout_width="match_parent"
@@ -69,7 +67,6 @@
             android:paddingBottom="8dp"
             android:scrollbars="vertical" />
 
-        <!-- Modern Floating Action Button Container -->
         <androidx.cardview.widget.CardView
             android:id="@+id/addVocabularySetContainer"
             android:layout_width="match_parent"
@@ -92,7 +89,6 @@
                 android:paddingBottom="20dp"
                 android:background="@color/surface_white">
 
-                <!-- Enhanced Add Button with Icon -->
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAddVocabularySet"
                     android:layout_width="match_parent"

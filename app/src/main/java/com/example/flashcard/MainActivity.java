@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Set status bar color to green and make it transparent
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.green_primary, null));
             getWindow().getDecorView().setSystemUiVisibility(
@@ -54,35 +53,30 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewSets);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         
-        // Nút thêm bộ từ vựng
         Button btnAddVocabularySet = findViewById(R.id.btnAddVocabularySet);
         btnAddVocabularySet.setOnClickListener(v -> showAddVocabularySetDialog());
         
-        // Xử lý window insets để header không bị che và RecyclerView không bị che
         View headerView = findViewById(R.id.tvHeader);
         View addVocabularySetContainer = findViewById(R.id.addVocabularySetContainer);
         float density = getResources().getDisplayMetrics().density;
-        int headerPaddingTopDp = (int) (20 * density); // 20dp padding gốc
+        int headerPaddingTopDp = (int) (20 * density);
         
-        // Tìm LinearLayout bên trong CardView để set padding
         android.widget.LinearLayout buttonContainerLayout = findViewById(R.id.buttonContainerLayout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
             int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
             int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
             
-            // Thêm padding top cho header để kéo dài lên status bar và không bị che chữ
             if (headerView != null) {
                 headerView.setPadding(
                     headerView.getPaddingLeft(),
-                    headerPaddingTopDp + top, // 20dp padding gốc + status bar height
+                    headerPaddingTopDp + top,
                     headerView.getPaddingRight(),
                     headerView.getPaddingBottom()
                 );
             }
             
-            // Thêm padding bottom cho LinearLayout bên trong container nút thêm để tránh bị che bởi navigation bar
             if (buttonContainerLayout != null) {
-                int paddingBottomDp = (int) (28 * density); // 28dp padding base để đảm bảo không bị che
+                int paddingBottomDp = (int) (28 * density);
                 buttonContainerLayout.setPadding(
                     buttonContainerLayout.getPaddingLeft(),
                     buttonContainerLayout.getPaddingTop(),
@@ -91,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
             
-            // Thêm padding bottom cho RecyclerView để tránh bị che bởi navigation bar
             int paddingBottomDp = (int) (24 * density);
             recyclerView.setPadding(
                 recyclerView.getPaddingLeft(),
@@ -103,24 +96,18 @@ public class MainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        // Load danh sách bộ từ vựng
         loadVocabularySets();
         
-        // Thiết lập Adapter
         adapter = new VocabularySetAdapter(
             vocabularySets,
-            // Click vào item -> hiển thị danh sách từ vựng
             set -> {
                 Intent intent = new Intent(MainActivity.this, VocabularyListActivity.class);
                 intent.putExtra("JSON_FILE_NAME", set.getJsonFileName());
                 intent.putExtra("CATEGORY_TITLE", set.getTitle());
                 startActivity(intent);
             },
-            // Click vào play button -> hiển thị dialog chọn chế độ
             this::showModeSelectionDialog,
-            // Long click vào item -> hiển thị dialog chỉnh sửa/xóa
             set -> {
-                // Chỉ cho phép chỉnh sửa/xóa bộ từ vựng do user tạo
                 if (dataManager.isUserCreatedSet(set.getJsonFileName())) {
                     showEditVocabularySetDialog(set);
                 } else {
@@ -131,13 +118,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
     
-    /**
-     * Load danh sách bộ từ vựng từ cả assets và user data
-     */
     private void loadVocabularySets() {
         vocabularySets = new ArrayList<>();
         
-        // Load từ assets
         String[][] allSets = {
             {"Nhà", "house.json"},
             {"Thức ăn và đồ uống", "food.json"},
@@ -151,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
             {"Giáo dục", "education.json"}
         };
         
-        // Load và đếm số từ từ mỗi file JSON nếu file tồn tại
         for (String[] set : allSets) {
             String title = set[0];
             String fileName = set[1].trim();
@@ -164,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         
-        // Load từ user data
         List<VocabularySet> userSets = dataManager.getUserVocabularySets();
         for (VocabularySet set : userSets) {
             // Đếm số từ trong bộ do user tạo
@@ -173,17 +154,12 @@ public class MainActivity extends AppCompatActivity {
             vocabularySets.add(set);
         }
     }
-    
-    /**
-     * Hiển thị dialog để thêm bộ từ vựng mới
-     */
+
     private void showAddVocabularySetDialog() {
         AddVocabularySetDialog dialog = new AddVocabularySetDialog(
             this,
             newSet -> {
-                // Sau khi thêm thành công, reload danh sách
                 loadVocabularySets();
-                // Tạo lại adapter với danh sách mới
                 adapter = new VocabularySetAdapter(
                     vocabularySets,
                     set1 -> {
@@ -210,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload khi quay lại màn hình này
         loadVocabularySets();
         if (adapter != null && vocabularySets != null) {
             adapter = new VocabularySetAdapter(
@@ -234,11 +209,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Đọc và đếm số từ trong file JSON
-     * @param fileName Tên file JSON trong assets
-     * @return Số lượng từ trong file, 0 nếu có lỗi
-     */
     private int getWordCountFromJson(String fileName) {
         try {
             InputStream is = getAssets().open(fileName);
@@ -253,33 +223,21 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         }
     }
-    
-    /**
-     * Tìm tên file thực tế trong assets (có thể có khoảng trắng)
-     * @param fileName Tên file cần tìm
-     * @return Tên file thực tế nếu tìm thấy, null nếu không
-     */
+
     private String findActualFileName(String fileName) {
-        // Thử cả tên file có khoảng trắng và không có khoảng trắng
         String[] possibleNames = {fileName, fileName.trim(), " " + fileName.trim(), fileName.trim() + " "};
         
         for (String name : possibleNames) {
             try {
                 InputStream is = getAssets().open(name);
                 is.close();
-                return name; // Trả về tên file thực tế
+                return name;
             } catch (IOException e) {
-                // Tiếp tục thử tên khác
             }
         }
         return null;
     }
-    
-    /**
-     * Kiểm tra xem file có tồn tại trong assets không
-     * @param fileName Tên file cần kiểm tra
-     * @return true nếu file tồn tại, false nếu không
-     */
+
     private boolean fileExistsInAssets(String fileName) {
         return findActualFileName(fileName) != null;
     }
@@ -323,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
             this,
             set,
             updatedSet -> {
-                // Sau khi cập nhật, reload danh sách
                 loadVocabularySets();
                 adapter = new VocabularySetAdapter(
                     vocabularySets,
@@ -345,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
             },
             deletedSet -> {
-                // Sau khi xóa, reload danh sách
                 loadVocabularySets();
                 adapter = new VocabularySetAdapter(
                     vocabularySets,

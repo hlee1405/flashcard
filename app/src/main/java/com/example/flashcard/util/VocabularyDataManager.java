@@ -24,10 +24,7 @@ public class VocabularyDataManager {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
     }
-    
-    /**
-     * Lấy tất cả các bộ từ vựng do người dùng tạo
-     */
+
     public List<VocabularySet> getUserVocabularySets() {
         String json = prefs.getString(KEY_VOCABULARY_SETS, "[]");
         Type type = new TypeToken<List<VocabularySet>>() {}.getType();
@@ -35,26 +32,17 @@ public class VocabularyDataManager {
         return sets != null ? sets : new ArrayList<>();
     }
     
-    /**
-     * Thêm bộ từ vựng mới
-     */
     public void addVocabularySet(VocabularySet set) {
         List<VocabularySet> sets = getUserVocabularySets();
         sets.add(set);
         saveVocabularySets(sets);
     }
     
-    /**
-     * Lưu danh sách bộ từ vựng
-     */
     public void saveVocabularySets(List<VocabularySet> sets) {
         String json = gson.toJson(sets);
         prefs.edit().putString(KEY_VOCABULARY_SETS, json).apply();
     }
     
-    /**
-     * Lấy danh sách từ vựng của một bộ từ vựng
-     */
     public List<Word> getWordsForSet(String jsonFileName) {
         String key = KEY_WORDS_PREFIX + jsonFileName;
         String json = prefs.getString(key, "[]");
@@ -63,27 +51,18 @@ public class VocabularyDataManager {
         return words != null ? words : new ArrayList<>();
     }
     
-    /**
-     * Thêm từ vựng vào bộ từ vựng
-     */
     public void addWordToSet(String jsonFileName, Word word) {
         List<Word> words = getWordsForSet(jsonFileName);
         words.add(word);
         saveWordsForSet(jsonFileName, words);
     }
     
-    /**
-     * Lưu danh sách từ vựng của một bộ
-     */
     public void saveWordsForSet(String jsonFileName, List<Word> words) {
         String key = KEY_WORDS_PREFIX + jsonFileName;
         String json = gson.toJson(words);
         prefs.edit().putString(key, json).apply();
     }
-    
-    /**
-     * Xóa bộ từ vựng
-     */
+
     public void deleteVocabularySet(String jsonFileName) {
         List<VocabularySet> sets = getUserVocabularySets();
         sets.removeIf(set -> set.getJsonFileName().equals(jsonFileName));
@@ -93,18 +72,12 @@ public class VocabularyDataManager {
         String key = KEY_WORDS_PREFIX + jsonFileName;
         prefs.edit().remove(key).apply();
     }
-    
-    /**
-     * Kiểm tra xem bộ từ vựng có phải do người dùng tạo không
-     */
+
     public boolean isUserCreatedSet(String jsonFileName) {
         List<VocabularySet> sets = getUserVocabularySets();
         return sets.stream().anyMatch(set -> set.getJsonFileName().equals(jsonFileName));
     }
-    
-    /**
-     * Cập nhật bộ từ vựng
-     */
+
     public void updateVocabularySet(VocabularySet updatedSet) {
         List<VocabularySet> sets = getUserVocabularySets();
         for (int i = 0; i < sets.size(); i++) {
@@ -115,10 +88,7 @@ public class VocabularyDataManager {
         }
         saveVocabularySets(sets);
     }
-    
-    /**
-     * Xóa từ vựng khỏi bộ từ vựng
-     */
+
     public void deleteWordFromSet(String jsonFileName, Word wordToDelete) {
         List<Word> words = getWordsForSet(jsonFileName);
         words.removeIf(word -> 
@@ -127,10 +97,7 @@ public class VocabularyDataManager {
         );
         saveWordsForSet(jsonFileName, words);
     }
-    
-    /**
-     * Cập nhật từ vựng trong bộ từ vựng
-     */
+
     public void updateWordInSet(String jsonFileName, Word oldWord, Word newWord) {
         List<Word> words = getWordsForSet(jsonFileName);
         for (int i = 0; i < words.size(); i++) {

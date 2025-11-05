@@ -15,7 +15,6 @@ import java.util.List;
 
 public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.MatchViewHolder> {
 
-    // ... (Code constructor và interface không đổi)
     private final List<MatchCard> cardList;
     private final OnCardClickListener listener;
 
@@ -41,37 +40,29 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.MatchViewHol
         MatchCard card = cardList.get(position);
         holder.textView.setText(card.getText());
 
-        // Cập nhật giao diện dựa trên trạng thái của thẻ
         if (card.isMatched()) {
-            // Thẻ ĐÃ KHỚP và xử lý xong -> Ẩn đi
             holder.itemView.setVisibility(View.INVISIBLE);
         } else if (card.isCorrectPair()) {
-            // ✅ ĐÚNG CẶP (trạng thái trung gian): Hiện màu xanh
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#66BB6A")); // Màu xanh
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#66BB6A"));
             holder.itemView.setVisibility(View.VISIBLE);
         } else if (card.isWrongPair()) {
-            // ❌ SAI CẶP: Hiện màu đỏ
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#EF5350")); // Màu đỏ
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#EF5350"));
             holder.itemView.setVisibility(View.VISIBLE);
         } else if (card.isFlipped()) {
-            // ⚪️ ĐANG CHỌN: Hiện màu xám
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#BDBDBD")); // Màu xám
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#BDBDBD"));
             holder.itemView.setVisibility(View.VISIBLE);
         } else {
-            // ❓ TRẠNG THÁI CHỜ: Hiện màu trắng bình thường
             holder.cardView.setCardBackgroundColor(Color.WHITE);
             holder.itemView.setVisibility(View.VISIBLE);
         }
 
-        // Thiết lập sự kiện click
         holder.itemView.setOnClickListener(v -> {
-            if (!card.isMatched() && !card.isCorrectPair()) { // Không cho click khi đã đúng cặp
+            if (!card.isMatched() && !card.isCorrectPair()) {
                 listener.onCardClick(position);
             }
         });
     }
 
-    // ... (Code getItemCount và ViewHolder không đổi)
     @Override
     public int getItemCount() {
         return cardList.size();

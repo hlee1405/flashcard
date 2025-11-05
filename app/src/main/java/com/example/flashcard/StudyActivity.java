@@ -32,12 +32,10 @@ public class StudyActivity extends AppCompatActivity {
     private int currentWordIndex = 0;
     private VocabularyDataManager dataManager;
 
-    // Các thành phần UI
     private TextView tvEnglish, tvVietnamese, tvPronunciation;
     private Button btnPrevious, btnNext;
-    private ImageButton btnSpeak; // Nút phát âm mới
+    private ImageButton btnSpeak;
 
-    // Thành phần cho phát âm
     private TextToSpeech tts;
 
     @Override
@@ -47,7 +45,6 @@ public class StudyActivity extends AppCompatActivity {
 
         dataManager = new VocabularyDataManager(this);
 
-        // Xử lý window insets để tránh nội dung bị che
         View mainContent = findViewById(R.id.mainContent);
         View navigationButtons = findViewById(R.id.navigation_buttons);
         
@@ -55,7 +52,6 @@ public class StudyActivity extends AppCompatActivity {
             int top = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
             int bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
             
-            // Thêm padding top cho main content để tránh bị che bởi status bar
             if (mainContent != null) {
                 float density = getResources().getDisplayMetrics().density;
                 int paddingTopDp = (int) (20 * density);
@@ -67,7 +63,6 @@ public class StudyActivity extends AppCompatActivity {
                 );
             }
             
-            // Thêm padding bottom cho navigation buttons để tránh bị che bởi navigation bar
             if (navigationButtons != null) {
                 float density = getResources().getDisplayMetrics().density;
                 int paddingBottomDp = (int) (16 * density);
@@ -81,7 +76,6 @@ public class StudyActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        // Lấy tên file JSON từ Intent
         String jsonFileName = getIntent().getStringExtra("JSON_FILE_NAME");
         loadWords(jsonFileName);
 
@@ -90,7 +84,6 @@ public class StudyActivity extends AppCompatActivity {
         setupClickListeners();
 
         if (wordList != null && !wordList.isEmpty()) {
-            // Xáo trộn danh sách từ để học ngẫu nhiên
             Collections.shuffle(wordList);
             displayCurrentWord();
         } else {
@@ -105,13 +98,12 @@ public class StudyActivity extends AppCompatActivity {
         tvPronunciation = findViewById(R.id.tvPronunciation);
         btnPrevious = findViewById(R.id.btnPrevious);
         btnNext = findViewById(R.id.btnNext);
-        btnSpeak = findViewById(R.id.btnSpeak); // Ánh xạ nút phát âm
+        btnSpeak = findViewById(R.id.btnSpeak);
     }
 
     private void setupTextToSpeech() {
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
-                // Thiết lập ngôn ngữ là tiếng Anh (Mỹ)
                 tts.setLanguage(Locale.US);
             } else {
                 Toast.makeText(this, "Khởi tạo TextToSpeech thất bại!", Toast.LENGTH_SHORT).show();
@@ -122,24 +114,17 @@ public class StudyActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnNext.setOnClickListener(v -> showNextWord());
         btnPrevious.setOnClickListener(v -> showPreviousWord());
-        // Thiết lập sự kiện click cho nút phát âm
         btnSpeak.setOnClickListener(v -> speakWord(tvEnglish.getText().toString()));
     }
 
-    /**
-     * Load từ vựng từ cả assets và user data
-     */
     private void loadWords(String fileName) {
         wordList = new ArrayList<>();
         
-        // Kiểm tra xem có phải bộ từ vựng do user tạo không
         boolean isUserCreated = dataManager.isUserCreatedSet(fileName);
         
         if (isUserCreated) {
-            // Load từ user data
             wordList = dataManager.getWordsForSet(fileName);
         } else {
-            // Load từ assets
             try {
                 InputStream is = getAssets().open(fileName);
                 InputStreamReader reader = new InputStreamReader(is);
@@ -155,7 +140,6 @@ public class StudyActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             
-            // Load thêm từ user data nếu có
             List<Word> userWords = dataManager.getWordsForSet(fileName);
             wordList.addAll(userWords);
         }
@@ -171,7 +155,6 @@ public class StudyActivity extends AppCompatActivity {
             tvEnglish.setText(word.getEnglish());
             tvVietnamese.setText(word.getVietnamese());
 
-            // Gán dữ liệu phiên âm, ẩn đi nếu không có
             if (word.getPronunciation() != null && !word.getPronunciation().isEmpty()) {
                 tvPronunciation.setText(word.getPronunciation());
                 tvPronunciation.setVisibility(View.VISIBLE);
@@ -188,7 +171,6 @@ public class StudyActivity extends AppCompatActivity {
     }
 
     private void showNextWord() {
-        // Tăng chỉ số, nếu đến cuối danh sách thì quay về đầu
         currentWordIndex = (currentWordIndex + 1) % wordList.size();
         displayCurrentWord();
     }
@@ -196,11 +178,9 @@ public class StudyActivity extends AppCompatActivity {
 
 
     private void showPreviousWord() {
-        // Giảm chỉ số
         if (currentWordIndex > 0) {
             currentWordIndex--;
         } else {
-            // Nếu đang ở đầu, chuyển đến cuối danh sách
             currentWordIndex = wordList.size() - 1;
         }
         displayCurrentWord();
@@ -208,7 +188,6 @@ public class StudyActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        // Giải phóng tài nguyên TTS để tránh rò rỉ bộ nhớ
         if (tts != null) {
             tts.stop();
             tts.shutdown();

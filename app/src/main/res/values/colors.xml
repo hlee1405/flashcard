@@ -10,7 +10,6 @@
     <color name="orange_delete">#FFFF9800</color>
     <color name="divider_gray">#FFE0E0E0</color>
     
-    <!-- Modern Color Palette -->
     <color name="background_light">#FFF5F7FA</color>
     <color name="surface_white">#FFFFFFFF</color>
     <color name="text_primary">#FF1A1A1A</color>
