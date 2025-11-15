@@ -2,6 +2,7 @@ package com.example.flashcard;
 
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import android.widget.Button;
 import com.example.flashcard.adapter.WordAdapter;
 import com.example.flashcard.dialog.AddWordDialog;
 import com.example.flashcard.dialog.EditWordDialog;
+import com.example.flashcard.dialog.WordDetailDialog;
 import com.example.flashcard.model.Word;
 import com.example.flashcard.util.VocabularyDataManager;
 import com.google.gson.Gson;
@@ -80,6 +82,8 @@ public class VocabularyListActivity extends AppCompatActivity {
 
         adapter = new WordAdapter(wordList, this::speakWord, (word, position) -> {
             showEditWordDialog(word);
+        }, clickedWord -> {
+            showWordDetailDialog(clickedWord);
         });
         recyclerView.setAdapter(adapter);
         
@@ -154,7 +158,7 @@ public class VocabularyListActivity extends AppCompatActivity {
                     wordList.addAll(assetWords);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("VocabularyListActivity", "Error loading words from assets", e);
                 Toast.makeText(this, "Lỗi khi tải từ vựng từ assets!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -177,6 +181,8 @@ public class VocabularyListActivity extends AppCompatActivity {
                 loadWords();
                 adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
                     showEditWordDialog(w);
+                }, clickedWord -> {
+                    showWordDetailDialog(clickedWord);
                 });
                 recyclerView.setAdapter(adapter);
             }
@@ -191,6 +197,8 @@ public class VocabularyListActivity extends AppCompatActivity {
         if (adapter != null && wordList != null) {
             adapter = new WordAdapter(wordList, this::speakWord, (word, position) -> {
                 showEditWordDialog(word);
+            }, clickedWord -> {
+                showWordDetailDialog(clickedWord);
             });
             recyclerView.setAdapter(adapter);
         }
@@ -212,6 +220,11 @@ public class VocabularyListActivity extends AppCompatActivity {
         }
     }
 
+    private void showWordDetailDialog(Word word) {
+        WordDetailDialog dialog = new WordDetailDialog(this, word);
+        dialog.show();
+    }
+    
     private void showEditWordDialog(Word word) {
         EditWordDialog dialog = new EditWordDialog(
             this,
@@ -221,6 +234,8 @@ public class VocabularyListActivity extends AppCompatActivity {
                 loadWords();
                 adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
                     showEditWordDialog(w);
+                }, clickedWord -> {
+                    showWordDetailDialog(clickedWord);
                 });
                 recyclerView.setAdapter(adapter);
             },
@@ -228,6 +243,8 @@ public class VocabularyListActivity extends AppCompatActivity {
                 loadWords();
                 adapter = new WordAdapter(wordList, this::speakWord, (w, position) -> {
                     showEditWordDialog(w);
+                }, clickedWord -> {
+                    showWordDetailDialog(clickedWord);
                 });
                 recyclerView.setAdapter(adapter);
             }

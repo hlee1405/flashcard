@@ -19,6 +19,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
     private final List<Word> wordList;
     private final OnSpeakerClickListener speakerClickListener;
     private final OnItemLongClickListener longClickListener;
+    private final OnItemClickListener itemClickListener;
 
     public interface OnSpeakerClickListener {
         void onSpeakerClick(String word);
@@ -27,17 +28,30 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
     public interface OnItemLongClickListener {
         void onItemLongClick(Word word, int position);
     }
+    
+    public interface OnItemClickListener {
+        void onItemClick(Word word);
+    }
 
     public WordAdapter(List<Word> wordList, OnSpeakerClickListener listener) {
         this.wordList = wordList;
         this.speakerClickListener = listener;
         this.longClickListener = null;
+        this.itemClickListener = null;
     }
     
     public WordAdapter(List<Word> wordList, OnSpeakerClickListener listener, OnItemLongClickListener longClickListener) {
         this.wordList = wordList;
         this.speakerClickListener = listener;
         this.longClickListener = longClickListener;
+        this.itemClickListener = null;
+    }
+    
+    public WordAdapter(List<Word> wordList, OnSpeakerClickListener listener, OnItemLongClickListener longClickListener, OnItemClickListener itemClickListener) {
+        this.wordList = wordList;
+        this.speakerClickListener = listener;
+        this.longClickListener = longClickListener;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -62,6 +76,10 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             holder.tvPronunciation.setVisibility(View.GONE);
         }
         
+        // Hide example and memory tip - they will be shown in popup dialog
+        holder.tvExample.setVisibility(View.GONE);
+        holder.tvMemoryTip.setVisibility(View.GONE);
+        
         if (holder.speakerButtonContainer != null) {
             holder.speakerButtonContainer.setOnClickListener(v -> {
                 if (speakerClickListener != null) {
@@ -75,6 +93,13 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
                 }
             });
         }
+        
+        // Handle item click to show detail dialog
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(word);
+            }
+        });
         
         holder.itemView.setOnLongClickListener(v -> {
             if (longClickListener != null) {
@@ -94,6 +119,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
         TextView tvVietnamese;
         TextView tvEnglish;
         TextView tvPronunciation;
+        TextView tvExample;
+        TextView tvMemoryTip;
         ImageView ivSpeaker;
         CardView speakerButtonContainer;
 
@@ -102,6 +129,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             tvVietnamese = itemView.findViewById(R.id.tvVietnamese);
             tvEnglish = itemView.findViewById(R.id.tvEnglish);
             tvPronunciation = itemView.findViewById(R.id.tvPronunciation);
+            tvExample = itemView.findViewById(R.id.tvExample);
+            tvMemoryTip = itemView.findViewById(R.id.tvMemoryTip);
             ivSpeaker = itemView.findViewById(R.id.ivSpeaker);
             speakerButtonContainer = itemView.findViewById(R.id.speakerButtonContainer);
         }

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
@@ -127,7 +128,7 @@ public class MatchActivity extends AppCompatActivity {
                     fullWordList.addAll(assetWords);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("MatchActivity", "Error loading words from assets", e);
             }
             
             List<Word> userWords = dataManager.getWordsForSet(fileName);

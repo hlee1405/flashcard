@@ -2,6 +2,7 @@ package com.example.flashcard;
 
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -137,7 +138,7 @@ public class StudyActivity extends AppCompatActivity {
                     wordList.addAll(assetWords);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("StudyActivity", "Error loading words from assets", e);
             }
             
             List<Word> userWords = dataManager.getWordsForSet(fileName);

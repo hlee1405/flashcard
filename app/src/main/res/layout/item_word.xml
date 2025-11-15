@@ -63,7 +63,7 @@
             android:orientation="horizontal"
             android:gravity="end|top"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="6dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline"
@@ -85,12 +85,14 @@
                     android:layout_height="wrap_content"
                     android:text="Apple"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:fontFamily="sans-serif"
-                    android:maxLines="2"
+                    android:maxLines="3"
                     android:ellipsize="end"
                     android:gravity="end|top"
                     android:lineSpacingExtra="2dp"
+                    android:breakStrategy="simple"
+                    android:hyphenationFrequency="none"
                     tools:text="Living room" />
 
                 <TextView
@@ -107,6 +109,37 @@
                     android:gravity="end"
                     android:singleLine="true"
                     tools:text="[/'æp.əl/]" />
+
+                <TextView
+                    android:id="@+id/tvExample"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Example: I like apples."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif"
+                    android:fontStyle="italic"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:visibility="gone"
+                    tools:text="Example: I like apples." />
+
+                <TextView
+                    android:id="@+id/tvMemoryTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="💡 Mẹo: ..."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:visibility="gone"
+                    tools:text="💡 Mẹo: Ghi nhớ bằng cách..." />
             </LinearLayout>
         </LinearLayout>
 
@@ -120,7 +153,7 @@
             android:elevation="0dp"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="6dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
