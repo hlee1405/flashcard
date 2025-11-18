@@ -76,7 +76,6 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             holder.tvPronunciation.setVisibility(View.GONE);
         }
         
-        // Hide example and memory tip - they will be shown in popup dialog
         holder.tvExample.setVisibility(View.GONE);
         holder.tvMemoryTip.setVisibility(View.GONE);
         
@@ -94,7 +93,6 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordViewHolder
             });
         }
         
-        // Handle item click to show detail dialog
         holder.itemView.setOnClickListener(v -> {
             if (itemClickListener != null) {
                 itemClickListener.onItemClick(word);

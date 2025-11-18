@@ -68,7 +68,6 @@ public class VocabularyDataManager {
         sets.removeIf(set -> set.getJsonFileName().equals(jsonFileName));
         saveVocabularySets(sets);
         
-        // Xóa từ vựng của bộ đó
         String key = KEY_WORDS_PREFIX + jsonFileName;
         prefs.edit().remove(key).apply();
     }

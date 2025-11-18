@@ -76,14 +76,12 @@ public class AIVocabularyDialog extends Dialog {
         btnGenerate = findViewById(R.id.btnGenerate);
         btnCancel = findViewById(R.id.btnCancel);
 
-        // Setup Spinner với các phong cách
         String[] styles = {"Mặc định", "Đơn giản", "Hài hước", "Học thuật", "Trẻ em"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), 
             android.R.layout.simple_spinner_item, styles);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStyle.setAdapter(adapter);
 
-        // Load saved preferences
         loadPreferences();
 
         btnCancel.setOnClickListener(v -> dismiss());
@@ -114,23 +112,18 @@ public class AIVocabularyDialog extends Dialog {
                 return;
             }
 
-            // Get interests and style
             String interests = etInterests.getText().toString().trim();
             String style = spinnerStyle.getSelectedItem().toString();
             
-            // Save preferences
             savePreferences(interests, style);
 
-            // Start generation
             generateVocabulary(configApiKey, topic, wordCount, interests, style);
         });
     }
     
     private void generateVocabulary(String apiKey, String topic, int wordCount, String interests, String style) {
-        // Đóng dialog tạo từ vựng
         dismiss();
         
-        // Hiển thị loading dialog riêng
         loadingDialog = new ProgressDialog(getContext());
         loadingDialog.setMessage("Đang tạo từ vựng...\nVui lòng đợi trong giây lát...");
         loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -144,7 +137,6 @@ public class AIVocabularyDialog extends Dialog {
             @Override
             public void onSuccess(List<Word> words) {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    // Đóng loading dialog
                     if (loadingDialog != null && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
@@ -154,7 +146,6 @@ public class AIVocabularyDialog extends Dialog {
                         return;
                     }
                     
-                    // Create vocabulary set
                     String fileName = "ai_" + System.currentTimeMillis() + ".json";
                     String title = getContext().getString(R.string.ai_prefix, topic);
                     VocabularySet newSet = new VocabularySet(title, fileName, words.size());
@@ -173,7 +164,6 @@ public class AIVocabularyDialog extends Dialog {
             @Override
             public void onError(String error) {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    // Đóng loading dialog
                     if (loadingDialog != null && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
@@ -205,7 +195,6 @@ public class AIVocabularyDialog extends Dialog {
             etInterests.setText(savedInterests);
         }
         
-        // Set spinner to saved style
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinnerStyle.getAdapter();
         if (adapter != null) {
             int position = adapter.getPosition(savedStyle);

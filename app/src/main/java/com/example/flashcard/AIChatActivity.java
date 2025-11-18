@@ -85,7 +85,6 @@ public class AIChatActivity extends AppCompatActivity {
 
         btnSend.setOnClickListener(v -> sendMessage());
 
-        // Gửi khi nhấn Enter (hoặc xuống dòng)
         etMessage.setOnEditorActionListener((v, actionId, event) -> {
             if (event != null && event.getAction() == android.view.KeyEvent.ACTION_DOWN 
                     && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER 
@@ -96,7 +95,6 @@ public class AIChatActivity extends AppCompatActivity {
             return false;
         });
 
-        // Thêm tin nhắn chào mừng từ AI
         addWelcomeMessage();
 
         View inputContainer = findViewById(R.id.inputContainer);
@@ -116,27 +114,20 @@ public class AIChatActivity extends AppCompatActivity {
             }
             
             if (inputContainer != null) {
-                // Đảm bảo thanh chat được đẩy lên cao, không bị navigation bar che
                 float density = getResources().getDisplayMetrics().density;
                 
-                // Tính toán padding bottom: navigation bar height + thêm rất nhiều padding để đẩy nội dung lên cao
-                // Padding này sẽ đẩy nội dung (EditText và Button) lên trên navigation bar
-                int extraPadding = (int) (120 * density); // Tăng lên 120dp để đẩy cao hơn rất nhiều
+                int extraPadding = (int) (120 * density);
                 int totalPaddingBottom = bottom + extraPadding;
                 
-                // Nếu không có navigation bar, vẫn thêm padding để an toàn
                 if (bottom == 0) {
                     totalPaddingBottom = (int) (160 * density);
                 }
                 
-                // Đảm bảo có ít nhất 180dp padding để chắc chắn không bị che
                 int minPadding = (int) (180 * density);
                 totalPaddingBottom = Math.max(totalPaddingBottom, minPadding);
                 
-                // Log để debug
                 Log.d("AIChatActivity", "Bottom insets: " + bottom + ", Total padding: " + totalPaddingBottom);
                 
-                // Set padding cho CardView - padding này sẽ đẩy nội dung lên trên
                 inputContainer.setPadding(
                     inputContainer.getPaddingLeft(),
                     inputContainer.getPaddingTop(),
@@ -144,7 +135,6 @@ public class AIChatActivity extends AppCompatActivity {
                     totalPaddingBottom
                 );
                 
-                // Bỏ margin bottom
                 android.view.ViewGroup.MarginLayoutParams params = 
                     (android.view.ViewGroup.MarginLayoutParams) inputContainer.getLayoutParams();
                 if (params != null) {
@@ -152,11 +142,9 @@ public class AIChatActivity extends AppCompatActivity {
                     inputContainer.setLayoutParams(params);
                 }
                 
-                // Đảm bảo LinearLayout bên trong có padding để nội dung không bị che
                 android.view.View linearLayout = ((android.view.ViewGroup) inputContainer).getChildAt(0);
                 if (linearLayout != null) {
-                    // Padding bottom cho LinearLayout để đẩy EditText và Button lên trên
-                    int linearLayoutPadding = (int) (48 * density); // Tăng lên 48dp
+                    int linearLayoutPadding = (int) (48 * density);
                     linearLayout.setPadding(
                         linearLayout.getPaddingLeft(),
                         linearLayout.getPaddingTop(),
@@ -199,33 +187,27 @@ public class AIChatActivity extends AppCompatActivity {
             return;
         }
 
-        // Thêm tin nhắn của user vào danh sách
         ChatMessage userMessage = new ChatMessage(ChatMessage.Sender.USER, messageText);
         messages.add(userMessage);
         adapter.notifyItemInserted(messages.size() - 1);
         scrollToBottom();
 
-        // Xóa text trong input
         etMessage.setText("");
         
-        // Disable input và hiển thị loading
         etMessage.setEnabled(false);
         btnSend.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
 
-        // Gửi tin nhắn đến AI
         gptApiService.setApiKey(configApiKey);
         gptApiService.sendChatMessage(messageText, new GPTApiService.ChatCallback() {
             @Override
             public void onSuccess(String response) {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    // Thêm phản hồi từ AI
                     ChatMessage aiMessage = new ChatMessage(ChatMessage.Sender.AI, response);
                     messages.add(aiMessage);
                     adapter.notifyItemInserted(messages.size() - 1);
                     scrollToBottom();
                     
-                    // Enable input lại
                     etMessage.setEnabled(true);
                     btnSend.setEnabled(true);
                     progressBar.setVisibility(View.GONE);
@@ -235,7 +217,6 @@ public class AIChatActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    // Thêm tin nhắn lỗi từ AI
                     ChatMessage errorMessage = new ChatMessage(
                         ChatMessage.Sender.AI,
                         "Xin lỗi, đã có lỗi xảy ra: " + error
@@ -244,7 +225,6 @@ public class AIChatActivity extends AppCompatActivity {
                     adapter.notifyItemInserted(messages.size() - 1);
                     scrollToBottom();
                     
-                    // Enable input lại
                     etMessage.setEnabled(true);
                     btnSend.setEnabled(true);
                     progressBar.setVisibility(View.GONE);

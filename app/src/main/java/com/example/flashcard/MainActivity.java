@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewSets);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Setup menu button
         ImageView btnMenu = findViewById(R.id.btnMenu);
         if (btnMenu != null) {
             btnMenu.setOnClickListener(v -> showMenuPopup(v));
@@ -157,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
 
         List<VocabularySet> userSets = dataManager.getUserVocabularySets();
         for (VocabularySet set : userSets) {
-            // Đếm số từ trong bộ do user tạo
             List<Word> words = dataManager.getWordsForSet(set.getJsonFileName());
             set.setWordCount(words.size());
             vocabularySets.add(set);
@@ -270,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
                 is.close();
                 return name;
             } catch (IOException e) {
-                // File not found, try next name
             }
         }
         return null;
@@ -317,17 +314,14 @@ public class MainActivity extends AppCompatActivity {
         popupMenu.getMenu().add(0, 1, 0, "💬 AI Chat");
         popupMenu.getMenu().add(0, 2, 0, "🤖 Tạo bộ từ vựng bằng AI");
         
-        // Set gravity để popup hiển thị bên trái và lên trên
         popupMenu.setGravity(android.view.Gravity.END | android.view.Gravity.TOP);
         
         popupMenu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == 1) {
-                // AI Chat
                 Intent intent = new Intent(MainActivity.this, AIChatActivity.class);
                 startActivity(intent);
                 return true;
             } else if (item.getItemId() == 2) {
-                // Tạo từ vựng bằng AI
                 showAIVocabularyDialog();
                 return true;
             }
@@ -336,21 +330,18 @@ public class MainActivity extends AppCompatActivity {
         
         popupMenu.show();
         
-        // Điều chỉnh vị trí popup sau khi show
         try {
             java.lang.reflect.Field mPopup = PopupMenu.class.getDeclaredField("mPopup");
             mPopup.setAccessible(true);
             Object menuPopupHelper = mPopup.get(popupMenu);
             Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
             
-            // Set offset để lùi lên trên và sang trái
             java.lang.reflect.Method setOffset = classPopupHelper.getMethod("setHorizontalOffset", int.class);
-            setOffset.invoke(menuPopupHelper, -(int)(40 * getResources().getDisplayMetrics().density)); // Lùi sang trái
+            setOffset.invoke(menuPopupHelper, -(int)(40 * getResources().getDisplayMetrics().density));
             
             java.lang.reflect.Method setVerticalOffset = classPopupHelper.getMethod("setVerticalOffset", int.class);
-            setVerticalOffset.invoke(menuPopupHelper, -(int)(20 * getResources().getDisplayMetrics().density)); // Lùi lên trên
+            setVerticalOffset.invoke(menuPopupHelper, -(int)(20 * getResources().getDisplayMetrics().density));
         } catch (Exception e) {
-            // Nếu reflection không hoạt động, bỏ qua
             Log.e("MainActivity", "Error adjusting popup position", e);
         }
     }

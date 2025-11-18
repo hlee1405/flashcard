@@ -76,7 +76,6 @@ public class GPTApiService {
         messages.add(message);
         requestBody.add("messages", messages);
         requestBody.addProperty("temperature", 0.7);
-        // Increase max_tokens to handle larger responses (estimate ~200 tokens per word)
         requestBody.addProperty("max_tokens", Math.max(4000, wordCount * 250));
         
         RequestBody body = RequestBody.create(requestBody.toString(), JSON);
@@ -124,7 +123,6 @@ public class GPTApiService {
         prompt.append("Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy tạo ").append(wordCount)
               .append(" từ vựng tiếng Anh dựa trên chủ đề hoặc từ khóa sau: \"").append(topicOrWords).append("\"\n\n");
         
-        // Thêm yêu cầu về sở thích nếu có
         if (interests != null && !interests.trim().isEmpty()) {
             prompt.append("QUAN TRỌNG - Cá nhân hóa theo sở thích:\n");
             prompt.append("Người học có sở thích về: ").append(interests).append("\n");
@@ -133,7 +131,6 @@ public class GPTApiService {
             prompt.append("Nếu sở thích là \"phim ảnh\", hãy tạo ví dụ về phim ảnh.\n\n");
         }
         
-        // Thêm yêu cầu về phong cách
         if (style != null && !style.equals("Mặc định")) {
             prompt.append("QUAN TRỌNG - Phong cách giải thích:\n");
             switch (style) {
@@ -198,7 +195,6 @@ public class GPTApiService {
         JsonObject message = firstChoice.getAsJsonObject("message");
         String content = message.get("content").getAsString();
         
-        // Loại bỏ markdown code blocks nếu có
         content = content.trim();
         if (content.startsWith("```json")) {
             content = content.substring(7);
@@ -211,7 +207,6 @@ public class GPTApiService {
         }
         content = content.trim();
         
-        // Log the content for debugging (truncated if too long)
         if (content.length() > 500) {
             Log.d(TAG, "Response content (first 500 chars): " + content.substring(0, 500));
             Log.d(TAG, "Response content (last 500 chars): " + content.substring(Math.max(0, content.length() - 500)));
@@ -219,13 +214,10 @@ public class GPTApiService {
             Log.d(TAG, "Response content: " + content);
         }
         
-        // Check if JSON appears incomplete (doesn't end with ])
         if (!content.trim().endsWith("]")) {
             Log.w(TAG, "JSON response appears incomplete. Attempting to fix...");
-            // Try to find the last complete JSON object
             int lastCompleteBrace = content.lastIndexOf("}");
             if (lastCompleteBrace > 0) {
-                // Find the start of the last object
                 int arrayStart = content.indexOf("[");
                 if (arrayStart >= 0 && lastCompleteBrace > arrayStart) {
                     content = content.substring(0, lastCompleteBrace + 1) + "]";
@@ -249,7 +241,6 @@ public class GPTApiService {
             try {
                 JsonObject wordObj = element.getAsJsonObject();
                 
-                // Check if required fields exist
                 if (!wordObj.has("english") || !wordObj.has("vietnamese")) {
                     Log.w(TAG, "Skipping incomplete word object: " + wordObj);
                     continue;
@@ -267,7 +258,6 @@ public class GPTApiService {
                 words.add(new Word(english, vietnamese, pronunciation, example, memoryTip));
             } catch (Exception e) {
                 Log.w(TAG, "Error parsing word object, skipping: " + e.getMessage());
-                // Continue with next word instead of failing completely
             }
         }
         
@@ -290,7 +280,6 @@ public class GPTApiService {
         
         JsonArray messages = new JsonArray();
         
-        // System message để AI hiểu context
         JsonObject systemMessage = new JsonObject();
         systemMessage.addProperty("role", "system");
         systemMessage.addProperty("content", 
@@ -300,7 +289,6 @@ public class GPTApiService {
             "Hãy trả lời bằng tiếng Việt trừ khi được yêu cầu khác.");
         messages.add(systemMessage);
         
-        // User message
         JsonObject userMsg = new JsonObject();
         userMsg.addProperty("role", "user");
         userMsg.addProperty("content", userMessage);

@@ -89,7 +89,7 @@ public class StudyActivity extends AppCompatActivity {
             displayCurrentWord();
         } else {
             Toast.makeText(this, "Không thể tải bộ từ vựng!", Toast.LENGTH_SHORT).show();
-            finish(); // Đóng Activity nếu không có dữ liệu
+            finish();
         }
     }
 

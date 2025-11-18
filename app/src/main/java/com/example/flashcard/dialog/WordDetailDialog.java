@@ -33,12 +33,10 @@ public class WordDetailDialog extends Dialog {
         TextView tvMemoryTip = findViewById(R.id.tvMemoryTip);
         Button btnClose = findViewById(R.id.btnClose);
         
-        // Set word title (English)
         if (word != null && !TextUtils.isEmpty(word.getEnglish())) {
             tvWordTitle.setText(word.getEnglish());
         }
         
-        // Set pronunciation
         if (word != null && !TextUtils.isEmpty(word.getPronunciation())) {
             tvPronunciation.setText("[" + word.getPronunciation() + "]");
             tvPronunciation.setVisibility(View.VISIBLE);
@@ -46,7 +44,6 @@ public class WordDetailDialog extends Dialog {
             tvPronunciation.setVisibility(View.GONE);
         }
         
-        // Set example
         if (word != null && !TextUtils.isEmpty(word.getExample())) {
             tvExample.setText(word.getExample());
             tvExample.setVisibility(View.VISIBLE);
@@ -54,7 +51,6 @@ public class WordDetailDialog extends Dialog {
             tvExample.setVisibility(View.GONE);
         }
         
-        // Set memory tip
         if (word != null && !TextUtils.isEmpty(word.getMemoryTip())) {
             tvMemoryTip.setText(word.getMemoryTip());
             tvMemoryTip.setVisibility(View.VISIBLE);

@@ -50,7 +50,7 @@
             android:id="@+id/etTopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ví dụ: Công việc, Du lịch, hoặc: apple, banana, orange"
+            android:hint="Ví dụ: Công việc, du lịch,..."
             android:inputType="textMultiLine"
             android:textSize="16sp"
             android:textColorHint="@color/text_secondary"
