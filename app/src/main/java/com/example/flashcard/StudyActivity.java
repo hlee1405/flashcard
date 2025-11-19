@@ -33,11 +33,13 @@ public class StudyActivity extends AppCompatActivity {
     private int currentWordIndex = 0;
     private VocabularyDataManager dataManager;
 
-    private TextView tvEnglish, tvVietnamese, tvPronunciation;
+    private TextView tvEnglish, tvVietnamese, tvPronunciation, tvExample, tvMemoryTip;
     private Button btnPrevious, btnNext;
     private ImageButton btnSpeak;
+    private View cardFront, cardBack, flashcardContainer;
 
     private TextToSpeech tts;
+    private boolean isCardFlipped = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +99,14 @@ public class StudyActivity extends AppCompatActivity {
         tvEnglish = findViewById(R.id.tvEnglish);
         tvVietnamese = findViewById(R.id.tvVietnamese);
         tvPronunciation = findViewById(R.id.tvPronunciation);
+        tvExample = findViewById(R.id.tvExample);
+        tvMemoryTip = findViewById(R.id.tvMemoryTip);
         btnPrevious = findViewById(R.id.btnPrevious);
         btnNext = findViewById(R.id.btnNext);
         btnSpeak = findViewById(R.id.btnSpeak);
+        cardFront = findViewById(R.id.cardFront);
+        cardBack = findViewById(R.id.cardBack);
+        flashcardContainer = findViewById(R.id.flashcardContainer);
     }
 
     private void setupTextToSpeech() {
@@ -115,7 +122,15 @@ public class StudyActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnNext.setOnClickListener(v -> showNextWord());
         btnPrevious.setOnClickListener(v -> showPreviousWord());
-        btnSpeak.setOnClickListener(v -> speakWord(tvEnglish.getText().toString()));
+
+        btnSpeak.setOnClickListener(v -> {
+            v.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+            speakWord(tvEnglish.getText().toString());
+        });
+        btnSpeak.setClickable(true);
+        btnSpeak.setFocusable(true);
+
+        flashcardContainer.setOnClickListener(v -> flipCard());
     }
 
     private void loadWords(String fileName) {
@@ -162,7 +177,75 @@ public class StudyActivity extends AppCompatActivity {
             } else {
                 tvPronunciation.setVisibility(View.GONE);
             }
+
+            if (word.getExample() != null && !word.getExample().trim().isEmpty()) {
+                tvExample.setText("📝 " + word.getExample());
+                tvExample.setVisibility(View.VISIBLE);
+            } else {
+                tvExample.setVisibility(View.GONE);
+            }
+
+
+            if (word.getMemoryTip() != null && !word.getMemoryTip().trim().isEmpty()) {
+                tvMemoryTip.setText("💡 " + word.getMemoryTip());
+                tvMemoryTip.setVisibility(View.VISIBLE);
+            } else {
+                tvMemoryTip.setVisibility(View.GONE);
+            }
+
+            resetCardToFront();
         }
+    }
+
+    private void resetCardToFront() {
+        isCardFlipped = false;
+        cardFront.clearAnimation();
+        cardBack.clearAnimation();
+        cardFront.setVisibility(View.VISIBLE);
+        cardBack.setVisibility(View.GONE);
+        cardFront.setRotationY(0);
+        cardBack.setRotationY(180);
+    }
+
+    private void flipCard() {
+        if (isCardFlipped) {
+            flipToFront();
+        } else {
+            flipToBack();
+        }
+        isCardFlipped = !isCardFlipped;
+    }
+
+    private void flipToBack() {
+        cardFront.animate()
+                .rotationY(90)
+                .setDuration(150)
+                .withEndAction(() -> {
+                    cardFront.setVisibility(View.GONE);
+                    cardBack.setVisibility(View.VISIBLE);
+                    cardBack.setRotationY(270);
+                    cardBack.animate()
+                            .rotationY(360)
+                            .setDuration(150)
+                            .start();
+                })
+                .start();
+    }
+
+    private void flipToFront() {
+        cardBack.animate()
+                .rotationY(90)
+                .setDuration(150)
+                .withEndAction(() -> {
+                    cardBack.setVisibility(View.GONE);
+                    cardFront.setVisibility(View.VISIBLE);
+                    cardFront.setRotationY(270);
+                    cardFront.animate()
+                            .rotationY(360)
+                            .setDuration(150)
+                            .start();
+                })
+                .start();
     }
 
     private void speakWord(String word) {

@@ -53,8 +53,13 @@ public class AIChatActivity extends AppCompatActivity {
         gptApiService = new GPTApiService();
         configApiKey = BuildConfig.OPENAI_API_KEY;
         
+        // Debug: Log API key status (không log toàn bộ key vì lý do bảo mật)
         if (TextUtils.isEmpty(configApiKey)) {
-            Toast.makeText(this, "API Key chưa được cấu hình. Vui lòng cấu hình API Key trong build.gradle.", Toast.LENGTH_LONG).show();
+            Log.w("AIChatActivity", "API Key is empty or not configured");
+            Toast.makeText(this, getString(R.string.missing_api_key_config), Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("AIChatActivity", "API Key loaded: " + (configApiKey.length() > 0 ? 
+                configApiKey.substring(0, Math.min(10, configApiKey.length())) + "..." : "empty"));
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -183,7 +188,7 @@ public class AIChatActivity extends AppCompatActivity {
         }
         
         if (TextUtils.isEmpty(configApiKey)) {
-            Toast.makeText(this, "API Key chưa được cấu hình. Vui lòng cấu hình API Key.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.missing_api_key_config), Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -15,8 +17,51 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        def openAiKey = project.hasProperty("OPENAI_API_KEY") ? project.OPENAI_API_KEY : ""
-        def escapedOpenAiKey = openAiKey.replace("\\", "\\\\").replace("\"", "\\\"")
+        def resolveOpenAiKey = {
+            List<String> candidates = new ArrayList<>()
+
+            if (project.hasProperty("OPENAI_API_KEY") && project.OPENAI_API_KEY) {
+                candidates.add(project.OPENAI_API_KEY.toString())
+            }
+
+            def envKey = System.getenv("OPENAI_API_KEY")
+            if (envKey) {
+                candidates.add(envKey.toString())
+            }
+
+            def localPropsFile = rootProject.file("local.properties")
+            if (localPropsFile.exists()) {
+                Properties localProps = new Properties()
+                localPropsFile.withInputStream { stream ->
+                    localProps.load(stream)
+                }
+                def localPropKey = localProps.getProperty("OPENAI_API_KEY")
+                if (localPropKey) {
+                    candidates.add(localPropKey.toString())
+                }
+            }
+
+            return candidates.find { value -> value != null && !value.trim().isEmpty() } ?: ""
+        }
+
+        def openAiKey = resolveOpenAiKey().toString().trim()
+        if (openAiKey.isEmpty()) {
+            logger.warn("OPENAI_API_KEY is not configured. Set it in local.properties or as an environment variable.")
+        } else {
+            // Log first few characters for debugging (không log toàn bộ key)
+            def preview = openAiKey.length() > 10 ? openAiKey.substring(0, 10) + "..." : openAiKey
+            logger.info("OPENAI_API_KEY found: ${preview} (length: ${openAiKey.length()})")
+        }
+
+        // Escape special characters properly for Java string
+        def escapedOpenAiKey = openAiKey
+            .replace('\\', '\\\\')  // Escape backslashes first
+            .replace('"', '\\"')    // Escape quotes
+            .replace('$', '\\$')    // Escape dollar signs
+            .replace('\n', '\\n')   // Escape newlines
+            .replace('\r', '\\r')   // Escape carriage returns
+            .replace('\t', '\\t')   // Escape tabs
+        
         buildConfigField "String", "OPENAI_API_KEY", "\"${escapedOpenAiKey}\""
     }
 

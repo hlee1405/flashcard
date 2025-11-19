@@ -10,5 +10,5 @@
     <string name="no_vocabulary_created">Không tạo được từ vựng nào!</string>
     <string name="vocabulary_set_prefix">Bộ từ vựng: %1$s</string>
     <string name="cannot_edit_default_set">Không thể chỉnh sửa bộ từ vựng mặc định!</string>
-    <string name="missing_api_key_config">Chưa cấu hình API Key. Vui lòng đặt OPENAI_API_KEY trong gradle.properties!</string>
+    <string name="missing_api_key_config">Chưa cấu hình API Key. Vui lòng đặt OPENAI_API_KEY trong local.properties hoặc biến môi trường rồi rebuild ứng dụng.</string>
 </resources>

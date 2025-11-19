@@ -51,7 +51,18 @@ public class GPTApiService {
     }
     
     public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+        this.apiKey = apiKey != null ? apiKey.trim() : null;
+        if (this.apiKey != null && !this.apiKey.isEmpty()) {
+            // Validate API key format (OpenAI keys typically start with sk-)
+            if (!this.apiKey.startsWith("sk-")) {
+                Log.w(TAG, "API Key does not start with 'sk-'. May be invalid.");
+            }
+            Log.d(TAG, "API Key set: " + (this.apiKey.length() > 10 ? 
+                this.apiKey.substring(0, 10) + "..." : "short key") + 
+                " (length: " + this.apiKey.length() + ")");
+        } else {
+            Log.w(TAG, "API Key is null or empty");
+        }
     }
     
     public void generateVocabulary(String topicOrWords, int wordCount, GPTResponseCallback callback) {
@@ -79,6 +90,11 @@ public class GPTApiService {
         requestBody.addProperty("max_tokens", Math.max(4000, wordCount * 250));
         
         RequestBody body = RequestBody.create(requestBody.toString(), JSON);
+        
+        // Log request details (without exposing full API key)
+        Log.d(TAG, "Sending vocabulary request to: " + API_URL);
+        Log.d(TAG, "API Key prefix: " + (apiKey.length() > 10 ? apiKey.substring(0, 10) + "..." : apiKey));
+        
         Request request = new Request.Builder()
                 .url(API_URL)
                 .header("Authorization", "Bearer " + apiKey)
@@ -98,7 +114,31 @@ public class GPTApiService {
                 if (!response.isSuccessful()) {
                     String errorBody = response.body() != null ? response.body().string() : "Unknown error";
                     Log.e(TAG, "API error: " + response.code() + " - " + errorBody);
-                    callback.onError("Lỗi API: " + response.code() + ". " + errorBody);
+                    
+                    // Parse error message from OpenAI response
+                    String userFriendlyError = "Lỗi API: " + response.code();
+                    try {
+                        JsonObject errorJson = JsonParser.parseString(errorBody).getAsJsonObject();
+                        if (errorJson.has("error")) {
+                            JsonObject error = errorJson.getAsJsonObject("error");
+                            if (error.has("message")) {
+                                String errorMsg = error.get("message").getAsString();
+                                Log.e(TAG, "OpenAI error message: " + errorMsg);
+                                if (response.code() == 401) {
+                                    userFriendlyError = "API Key không hợp lệ hoặc đã bị thu hồi. Vui lòng kiểm tra lại API key và rebuild ứng dụng.";
+                                } else {
+                                    userFriendlyError = "Lỗi: " + errorMsg;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.w(TAG, "Could not parse error response", e);
+                        if (response.code() == 401) {
+                            userFriendlyError = "API Key không hợp lệ hoặc đã bị thu hồi. Vui lòng kiểm tra lại API key và rebuild ứng dụng.";
+                        }
+                    }
+                    
+                    callback.onError(userFriendlyError);
                     return;
                 }
                 
@@ -299,6 +339,11 @@ public class GPTApiService {
         requestBody.addProperty("max_tokens", 2000);
         
         RequestBody body = RequestBody.create(requestBody.toString(), JSON);
+        
+        // Log request details (without exposing full API key)
+        Log.d(TAG, "Sending chat request to: " + API_URL);
+        Log.d(TAG, "API Key prefix: " + (apiKey.length() > 10 ? apiKey.substring(0, 10) + "..." : apiKey));
+        
         Request request = new Request.Builder()
                 .url(API_URL)
                 .header("Authorization", "Bearer " + apiKey)
@@ -318,7 +363,31 @@ public class GPTApiService {
                 if (!response.isSuccessful()) {
                     String errorBody = response.body() != null ? response.body().string() : "Unknown error";
                     Log.e(TAG, "Chat API error: " + response.code() + " - " + errorBody);
-                    callback.onError("Lỗi API: " + response.code() + ". " + errorBody);
+                    
+                    // Parse error message from OpenAI response
+                    String userFriendlyError = "Lỗi API: " + response.code();
+                    try {
+                        JsonObject errorJson = JsonParser.parseString(errorBody).getAsJsonObject();
+                        if (errorJson.has("error")) {
+                            JsonObject error = errorJson.getAsJsonObject("error");
+                            if (error.has("message")) {
+                                String errorMsg = error.get("message").getAsString();
+                                Log.e(TAG, "OpenAI error message: " + errorMsg);
+                                if (response.code() == 401) {
+                                    userFriendlyError = "API Key không hợp lệ hoặc đã bị thu hồi. Vui lòng kiểm tra lại API key và rebuild ứng dụng.";
+                                } else {
+                                    userFriendlyError = "Lỗi: " + errorMsg;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.w(TAG, "Could not parse error response", e);
+                        if (response.code() == 401) {
+                            userFriendlyError = "API Key không hợp lệ hoặc đã bị thu hồi. Vui lòng kiểm tra lại API key và rebuild ứng dụng.";
+                        }
+                    }
+                    
+                    callback.onError(userFriendlyError);
                     return;
                 }
                 

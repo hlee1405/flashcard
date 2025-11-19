@@ -13,90 +13,158 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mainContent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
+                android:id="@+id/flashcardContainer"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
+                app:cardElevation="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_max="400dp"
+                app:layout_constraintHeight_max="400dp">
 
-                <RelativeLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp">
+                    android:layout_height="match_parent">
 
-                    <ImageButton
-                        android:id="@+id/btnSpeak"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_volume_up"
-                        android:contentDescription="Phát âm"
-                        app:tint="#555555" />
+                    <!-- Mặt trước: Tiếng Anh -->
+                    <RelativeLayout
+                        android:id="@+id/cardFront"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp"
+                        android:visibility="visible">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        <ImageButton
+                            android:id="@+id/btnSpeak"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_volume_up"
+                            android:contentDescription="Phát âm"
+                            app:tint="#555555" />
 
-                        <TextView
-                            android:id="@+id/tvEnglish"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#212121"
-                            android:textSize="36sp"
-                            android:textStyle="bold"
-                            tools:text="Resilient" />
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvPronunciation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:textColor="#757575"
-                            android:textSize="18sp"
-                            android:textStyle="italic"
-                            tools:text="/rɪˈzɪl.i.ənt/" />
-                    </LinearLayout>
-                </RelativeLayout>
+                            <TextView
+                                android:id="@+id/tvEnglish"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#212121"
+                                android:textSize="36sp"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:maxLines="3"
+                                android:ellipsize="end"
+                                tools:text="Resilient" />
+
+                            <TextView
+                                android:id="@+id/tvPronunciation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#757575"
+                                android:textSize="18sp"
+                                android:textStyle="italic"
+                                android:gravity="center"
+                                tools:text="/rɪˈzɪl.i.ənt/" />
+
+                            <TextView
+                                android:id="@+id/hintText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:text="👆 Chạm để xem nghĩa"
+                                android:textColor="#999999"
+                                android:textSize="14sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <!-- Mặt sau: Tiếng Việt -->
+                    <RelativeLayout
+                        android:id="@+id/cardBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp"
+                        android:visibility="gone"
+                        android:rotationY="180">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvVietnamese"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="#212121"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:maxLines="5"
+                                android:ellipsize="end"
+                                tools:text="Bền bỉ, kiên cường" />
+
+                            <TextView
+                                android:id="@+id/tvExample"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:gravity="center"
+                                android:textColor="#757575"
+                                android:textSize="16sp"
+                                android:textStyle="italic"
+                                android:maxLines="3"
+                                android:ellipsize="end"
+                                android:visibility="gone"
+                                tools:text="Example: She is very resilient." />
+
+                            <TextView
+                                android:id="@+id/tvMemoryTip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:gravity="center"
+                                android:textColor="#757575"
+                                android:textSize="14sp"
+                                android:maxLines="3"
+                                android:ellipsize="end"
+                                android:visibility="gone"
+                                tools:text="💡 Mẹo: Ghi nhớ bằng cách..." />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </FrameLayout>
             </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
-
-                <TextView
-                    android:id="@+id/tvVietnamese"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:textColor="#212121"
-                    android:textSize="32sp"
-                    tools:text="Bền bỉ, kiên cường" />
-
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/navigation_buttons"

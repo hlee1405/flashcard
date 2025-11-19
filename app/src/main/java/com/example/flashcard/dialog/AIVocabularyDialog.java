@@ -125,7 +125,7 @@ public class AIVocabularyDialog extends Dialog {
         dismiss();
         
         loadingDialog = new ProgressDialog(getContext());
-        loadingDialog.setMessage("Đang tạo từ vựng...\nVui lòng đợi trong giây lát...");
+        loadingDialog.setMessage("Đang tạo bộ từ vựng...\nVui lòng đợi trong giây lát...");
         loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         loadingDialog.setIndeterminate(true);
         loadingDialog.setCancelable(false);
